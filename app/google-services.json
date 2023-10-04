@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "297290158627",
+    "project_id": "studyapp-4fa34",
+    "storage_bucket": "studyapp-4fa34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297290158627:android:9045cd4b1b746d7d675796",
+        "android_client_info": {
+          "package_name": "com.cookandroid.studyapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6eoslB-LhJyz759UWpUgeNePVrXpSqdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
