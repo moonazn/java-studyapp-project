@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">StudyApp</string>
+
+    <array name="repeat_array">
+        <item>매일</item>
+        <item>매주</item>
+        <item>매월</item>
+        <!-- 다른 반복 주기 옵션들 추가 -->
+    </array>
 </resources>

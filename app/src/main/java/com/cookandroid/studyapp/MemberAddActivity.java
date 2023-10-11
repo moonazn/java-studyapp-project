@@ -27,6 +27,7 @@ public class MemberAddActivity extends AppCompatActivity {
                 // Intent를 사용하여 화면을 전환합니다.
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                overridePendingTransition(0, R.anim.horizon_exit);
             }
         });
     }

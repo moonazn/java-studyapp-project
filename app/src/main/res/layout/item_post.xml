@@ -16,6 +16,7 @@
         android:id="@+id/postImage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:background="@android:color/darker_gray"
         android:layout_marginTop="50dp"

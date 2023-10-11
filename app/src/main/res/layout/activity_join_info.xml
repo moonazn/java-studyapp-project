@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".JoinInfoActivity">
+
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:src="@drawable/logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="110dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        android:text="회원가입"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="20dp"/>
+
+    <EditText
+        android:id="@+id/name_area"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:textCursorDrawable="@drawable/cursor_drawble"
+        android:hint="What's your name?"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/name_area"
+        android:gravity="center"
+        android:layout_marginTop="40dp"
+        android:textColor="@android:color/holo_red_light"/>
+
+    <Button
+        android:id="@+id/join_button"
+        android:text="JOIN"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:background="@drawable/round_button2"
+        app:layout_constraintTop_toBottomOf="@id/name_area"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginRight="140dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
