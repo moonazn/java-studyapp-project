@@ -41,21 +41,83 @@
         android:layout_marginTop="70dp"
         android:layout_marginLeft="30dp" />
 
-    <View
+    <TextView
+        android:id="@+id/editFinish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="완료"
+        android:textColor="#2E64FE"
+        app:layout_constraintLeft_toLeftOf="@id/memberListText"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="320dp"
+        android:layout_marginTop="200dp"
+        android:visibility="gone"/>
+
+    <android.widget.FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         app:layout_constraintTop_toBottomOf="@+id/memberListText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="@android:color/darker_gray"
+        android:background="#E6E6E6"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="11dp">
 
 
-    </View>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:layout_constraintTop_toBottomOf="@+id/memberListText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="16dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/memberRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:scrollbars="horizontal"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/member_list_item" />
+        </HorizontalScrollView>
+
+
+        <ImageView
+            android:id="@+id/editButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center|end"
+            android:layout_margin="15dp"
+            android:minHeight="48dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/pen"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    </android.widget.FrameLayout>
+
+    <TextView
+        android:id="@+id/groupOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginRight="30dp"
+        android:text="스터디 탈퇴하기"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:textColor="#FA5882"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/memberListText"
+        tools:ignore="TextSizeCheck" />
 
     <Button
+        android:id="@+id/rockApps"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:layout_constraintTop_toBottomOf="@+id/memberListText"
@@ -64,17 +126,27 @@
         android:textSize="17dp"
         android:textColor="@color/black"
         android:backgroundTint="#6CFFFFFF"
-        android:layout_marginTop="120dp"/>
-    
+        android:layout_marginTop="150dp"/>
+
     <Button
         android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/greetText"
+        app:layout_constraintTop_toBottomOf="@+id/rockApps"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="400dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginTop="100dp"
         android:text="logout"/>
+
+    <Button
+        android:id="@+id/resignButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/logoutButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="30dp"
+        android:text="탈퇴"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         app:layout_constraintBottom_toBottomOf="parent"

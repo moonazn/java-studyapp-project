@@ -1,5 +1,7 @@
 package com.cookandroid.studyapp;
 
+import static com.cookandroid.studyapp.MyPageActivity.groupKey;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,15 +40,16 @@ public class BoardActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
 
         uploadDataList = new ArrayList<>();
         postAdapter = new PostAdapter(uploadDataList, this);
         recyclerView.setAdapter(postAdapter);
+        recyclerView.scrollToPosition(0);       // 이게 왜 작동이 안되지??????⭐️
 
 
         // Firebase Realtime Database에서 데이터를 가져와서 업로드 데이터 리스트에 추가
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Group/"+ groupKey + "/uploads");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -70,6 +73,7 @@ public class BoardActivity extends AppCompatActivity {
                                     // 로그에 유저 닉네임과 업로드 데이터 제목을 출력
                                     Log.d("FirebaseData", "User Nickname: " + userNickname + ", Title: " + uploadData.getPhoto_title());
                                     postAdapter.notifyDataSetChanged();
+                                    recyclerView.scrollToPosition(0);       // 이게 왜 작동이 안되지??????⭐️
                                 }
                             }
 

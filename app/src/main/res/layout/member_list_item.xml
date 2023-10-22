@@ -1,0 +1,65 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="20dp"
+    android:gravity="center">
+
+    <!-- 동그란 배경 -->
+    <LinearLayout
+        android:id="@+id/circle"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/circular_background"
+        android:gravity="center"
+        tools:ignore="ExtraText">
+
+        <!-- 두 글자 표시 -->
+        <TextView
+            android:id="@+id/memberInitials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="송지"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold">
+        </TextView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/memberFullname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:text="송지연"
+        android:textColor="@color/black"
+        android:textSize="10dp"
+        android:layout_gravity="center_horizontal"
+        tools:ignore="TextSizeCheck" />
+
+
+
+
+    <!-- 삭제 버튼 리니어 레이아웃 -->
+    <LinearLayout
+        android:id="@+id/deleteButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:background="@drawable/circular_background_transparent"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:src="@drawable/delete" />
+    </LinearLayout>
+
+
+</FrameLayout>

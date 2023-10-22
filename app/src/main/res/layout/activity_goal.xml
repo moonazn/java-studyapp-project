@@ -6,17 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 상단에 텍스트 뷰 추가 -->
+    <!-- 상단에 텍스트 뷰 -->
     <TextView
         android:id="@+id/textViewQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="당신의 목표는 무엇인가요?"
+        android:layout_marginTop="32dp"
+        android:text="Goals"
         android:textColor="@color/black"
-        android:textSize="30sp"
+        android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,8 +30,9 @@
         android:layout_marginTop="40dp"
         android:paddingBottom="8dp"
         android:text="선택된 날짜 : "
+        android:textStyle="bold"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewQuestion" />
 
@@ -40,11 +42,11 @@
         android:layout_width="56dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:backgroundTint="#DDDADA"
         android:text="확인"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="10sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.954"
@@ -70,7 +72,7 @@
         android:id="@+id/textInputLayout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="532dp"
+        android:layout_marginTop="500dp"
         app:counterEnabled="true"
         app:counterMaxLength="20"
         app:layout_constraintEnd_toStartOf="@+id/buttonAddGoal"
@@ -80,13 +82,13 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_memo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:backgroundTint="#DDDADA"
-            android:hint="메모를 남겨주세요"
+            android:hint="목표를 남겨주세요"
             android:maxLength="20"
             android:maxLines="1"
             android:singleLine="true"
-            android:textSize="18sp"
+            android:textSize="14sp"
             tools:ignore="InvalidId" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -99,7 +101,7 @@
         android:backgroundTint="#DDDADA"
         android:text="추가"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,13 +112,13 @@
     <!-- 목표 달성하러 가기 버튼 -->
     <Button
         android:id="@+id/buttonGoToGoal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="644dp"
+        android:layout_width="70dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="600dp"
         android:backgroundTint="#DDDADA"
-        android:text="목표 달성하러 가기"
+        android:text="  목록  "
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

@@ -1,178 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+    <!-- 상단 텍스트뷰 -->
+    <TextView
+        android:id="@+id/text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Calendar"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/logo"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
-    <!-- 주/월 토글 버튼 -->
+    <!-- FrameLayout 영역 -->
+    <FrameLayout
+        android:layout_width="236dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="30dp"
+        android:background="#EFEFEF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_id">
+
+        <!-- HorizontalScrollView -->
+        <HorizontalScrollView
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/memberRecyclerView"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:paddingStart="2dp"
+                android:paddingEnd="6dp"
+                android:scrollbars="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/member_list_item" />
+        </HorizontalScrollView>
+
+        <ImageView
+            android:id="@+id/editButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center|end"
+            android:layout_margin="6dp"
+            android:minHeight="48dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/pen"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        <!-- ImageView -->
+    </FrameLayout>
+
+    <CalendarView
+        android:id="@+id/calendarViewMonthly"
+        android:layout_width="408dp"
+        android:layout_height="305dp"
+        android:layout_marginTop="100dp"
+        android:showWeekNumber="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_id" />
+
+    <LinearLayout
+        android:id="@+id/goalContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarViewMonthly">
+    </LinearLayout>
+
+    <!-- 목록 레이아웃 -->
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goalContainer">
+
+        <LinearLayout
+            android:id="@+id/addbuttonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal">
+
+            <!-- 할 일 추가 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#D3D3D3"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="  할 일  "
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/plus_additional"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:clickable="true"
+                    android:contentDescription="TODO"
+                    android:focusable="true"
+                    android:onClick="onAdditionalClick"
+                    android:src="@drawable/plus" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
+        <!-- 목표 추가 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D3D3D3"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="48dp"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="  목표  "
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/plus_additional2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:clickable="true"
+                android:contentDescription="Goal"
+                android:focusable="true"
+                android:onClick="onAdditionalGoalClick"
+                android:src="@drawable/plus" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="190dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.072"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottomLayout">
+
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/blue_dot" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text=" 할 일 항목 1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/stopwatch"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="true"
+            android:contentDescription="Stopwatch"
+            android:focusable="true"
+            android:onClick="onAdditionalWatchClick"
+            android:src="@drawable/stopwatch"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="190dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/bottomLayout"
+        tools:layout_editor_absoluteX="205dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/blue_dot" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text=" 목표 항목 1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/timer"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="true"
+            android:contentDescription="Timer"
+            android:focusable="true"
+            android:onClick="onAdditionalTimerClick"
+            android:src="@drawable/timer"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
+
     <ToggleButton
         android:id="@+id/toggleButton"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:layout_gravity="end"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="24dp"
-        android:backgroundTint="#D3D3D3"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#DAD9D9"
         android:checked="true"
-        android:textColor="@color/black"
-        android:textOff="월"
-        android:textOn="주"
+        android:textColor="@android:color/black"
+        android:textOff="주"
+        android:textOn="월"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 월간 캘린더 뷰 -->
-    <CalendarView
-        android:id="@+id/calendarViewMonthly"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        app:layout_constraintTop_toTopOf="@+id/logo"
-        tools:layout_editor_absoluteX="-56dp" />
-
-    <!-- 주간 캘린더 뷰 -->
-    <CalendarView
-        android:id="@+id/calendarViewWeekly"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        app:layout_constraintTop_toTopOf="@+id/logo"
-        tools:layout_editor_absoluteX="-56dp" />
-
-    <LinearLayout
-        android:id="@+id/goalContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="368dp"
-        android:gravity="start"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/logo"
-        tools:layout_editor_absoluteX="0dp">
-
-        <!-- 목표 항목 1 -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="#D3D3D3"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/blue_dot" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="  목표 1  "
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
-            <ImageButton
-                android:id="@+id/buttonSubmitGoal1"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/plus"
-                android:contentDescription="추가 버튼 1"/>
-        </LinearLayout>
-
-        <!-- 목표 항목 2 -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="#D3D3D3"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/blue_dot" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="  목표 2  "
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
-            <ImageButton
-                android:id="@+id/buttonSubmitGoal2"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/plus"
-                android:contentDescription="추가 버튼 2"/>
-        </LinearLayout>
-
-        <!-- 목표 항목 3 -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="#D3D3D3"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/blue_dot" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="  목표 3  "
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
-            <ImageButton
-                android:id="@+id/buttonSubmitGoal3"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/plus"
-                android:contentDescription="추가 버튼 3"/>
-        </LinearLayout>
-    </LinearLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:layout_height="wrap_content">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp">
 
-        <include layout="@layout/bottom"></include>
+        <include
+            layout="@layout/bottom"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="128dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

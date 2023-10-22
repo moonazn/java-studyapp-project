@@ -7,18 +7,24 @@ public class UploadData {
     private String photo_title;
     private String user_id;
     private Long upload_time;
-
     private String photo_url;
+    private String post_id;
 
     public UploadData() {
     }
 
-    public UploadData(String photo_title, String user_id, Long upload_time, String photo_url) {
+    public UploadData(String post_id, String photo_title, String user_id, Long upload_time, String photo_url) {
+        this.post_id = post_id;
         this.photo_title = photo_title;
         this.user_id = user_id;
         this.upload_time = upload_time;
         this.photo_url = photo_url;
+
     }
+
+    public String getPost_id() { return post_id; }
+
+    public void setPost_id(String post_id) { this.post_id = post_id; }
 
     public String getPhoto_title() {
         return photo_title;
@@ -53,6 +59,7 @@ public class UploadData {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
+        map.put("post_id", post_id);
         map.put("photo_title", photo_title);
         map.put("user_id", user_id);
         map.put("upload_time", upload_time);

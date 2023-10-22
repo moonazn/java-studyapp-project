@@ -1,5 +1,7 @@
 package com.cookandroid.studyapp;
 
+import static com.cookandroid.studyapp.MyPageActivity.groupKey;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -78,10 +80,15 @@ public class UploadActivity extends AppCompatActivity {
                         // 다운로드 URL을 사용하여 Firebase Realtime Database에 데이터 추가
                         String photoUrl = uri.toString();
                         Log.d("photourl : ", photoUrl);
-                        UploadData uploadData = new UploadData(photoTitle, userId, uploadTime, photoUrl);
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("uploads");
+
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Group/"+ groupKey + "/uploads");
                         DatabaseReference newUploadRef = databaseReference.push(); // 새로운 데이터의 참조를 가져옴
+                        // 새로운 데이터의 고유한 post_id를 설정
+                        String post_id = newUploadRef.getKey();
+                        UploadData uploadData = new UploadData(post_id, photoTitle, userId, uploadTime, photoUrl);
+
                         newUploadRef.setValue(uploadData.toMap());
+
 
                         // 업로드 성공 처리
                         Toast.makeText(UploadActivity.this, "사진 업로드 성공", Toast.LENGTH_SHORT).show();
