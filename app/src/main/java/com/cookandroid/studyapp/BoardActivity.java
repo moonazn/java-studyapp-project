@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -102,6 +103,18 @@ public class BoardActivity extends AppCompatActivity {
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
+            }
+        });
+
+        ImageButton rank = findViewById(R.id.rankButton);
+
+        rank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BoardActivity.this, RankActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                overridePendingTransition(0, R.anim.horizon_exit);
             }
         });
 

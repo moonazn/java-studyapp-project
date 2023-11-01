@@ -116,6 +116,17 @@ public class MyPageActivity extends AppCompatActivity {
             }
         });
 
+        Button appLock = findViewById(R.id.rockApps);
+
+        appLock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        });
+
         TextView groupOut = findViewById(R.id.groupOutButton);
         Button logout = findViewById(R.id.logoutButton);
         Button resign = findViewById(R.id.resignButton);

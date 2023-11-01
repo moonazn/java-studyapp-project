@@ -1,88 +1,165 @@
 package com.cookandroid.studyapp;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.Handler;
 import android.view.View;
-import android.widget.Chronometer;
-import android.widget.ImageView;
-
-
+import android.widget.Button;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AddStopwatchActivity extends AppCompatActivity {
-
-    private Chronometer chronometer;
-    private ImageView startButton;
-    private ImageView pauseButton;
-    private ImageView stopButton;
+public class AddStopwatchActivity extends AppCompatActivity implements SensorEventListener {
+    private TextView stopwatchTextView;
+    private Button startButton, stopButton, resetButton;
+    private int seconds = 0;
     private boolean isRunning = false;
-    private long pauseOffset = 0;
+    private SharedPreferences sharedPreferences;
 
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private boolean isFaceDown = false;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_stopwatch);
 
-        chronometer = findViewById(R.id.chronometer);
-        chronometer.setFormat("00:00:00");
-        startButton = findViewById(R.id.timestart);
-        pauseButton = findViewById(R.id.timepause);
-        stopButton = findViewById(R.id.timestop);
+        stopwatchTextView = findViewById(R.id.stopwatchTextView);
+        startButton = findViewById(R.id.startButton);
+        stopButton = findViewById(R.id.stopButton);
+        resetButton = findViewById(R.id.resetButton);
 
-        setupButtonListeners();
-    }
+        sharedPreferences = getSharedPreferences("StopwatchPrefs", MODE_PRIVATE);
 
-    private void setupButtonListeners() {
+        // 시간 읽기
+        int initialTime = sharedPreferences.getInt("stopwatchTime", 0);
+        seconds = initialTime;
+        updateStopwatchText();
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                toggleStopwatch();
-            }
-        });
-
-        pauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pauseStopwatch();
+            public void onClick(View v) {
+                startStopwatch();
             }
         });
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                chronometer.stop();
-                chronometer.setBase(SystemClock.elapsedRealtime());
-                isRunning = false;
-                pauseOffset = 0;
+            public void onClick(View v) {
+                stopStopwatch();
             }
         });
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetStopwatch();
+            }
+        });
+
+        // 센서 매니저 초기화
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        // 센서 리스너 등록
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    private void toggleStopwatch() {
-        if (isRunning) {
-            chronometer.stop();
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
-        } else {
-            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
-            chronometer.start();
-        }
-        isRunning = !isRunning;
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // 센서 정확도 변경 이벤트 처리
     }
 
-    private void pauseStopwatch() {
-        if (isRunning) {
-            chronometer.stop();
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
-            isRunning = false;
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float[] values = event.values;
+            // 여기에서 가속도 값(values)을 이용해 화면이 위아래로 뒤집히는지 감지합니다.
+            // 원하는 방향의 뒤집힘을 감지하면 스톱워치를 시작하거나 멈추도록 제어할 수 있습니다.
+
+            // 예를 들어, 화면이 아래로 뒤집힌 상태를 감지하려면 다음과 같이 할 수 있습니다.
+            if (values[2] < -8 && !isFaceDown) {
+                isFaceDown = true;
+                startStopwatch(); // 스톱워치 시작
+            } else if (values[2] > 8 && isFaceDown) {
+                isFaceDown = false;
+                stopStopwatch(); // 스톱워치 멈춤
+            }
         }
+    }
+
+    private final Handler handler = new Handler();
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isRunning) {
+                seconds++;
+                int hours = seconds / 3600;
+                int minutes = (seconds % 3600) / 60;
+                int secs = seconds % 60;
+
+                String time = String.format("%02d:%02d:%02d", hours, minutes, secs);
+                stopwatchTextView.setText(time);
+
+                // 현재 시간을 SharedPreferences에 저장
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("stopwatchTime", seconds);
+                editor.apply();
+
+                handler.postDelayed(this, 1000);
+            }
+        }
+    };
+
+    private void startStopwatch() {
+        isRunning = true;
+        startButton.setEnabled(false);
+        stopButton.setEnabled(true);
+        resetButton.setEnabled(true);
+        handler.post(runnable);
+    }
+
+    private void stopStopwatch() {
+        isRunning = false;
+        startButton.setEnabled(true);
+        stopButton.setEnabled(false);
+    }
+
+    private void resetStopwatch() {
+        isRunning = false;
+        seconds = 0;
+        updateStopwatchText();
+        startButton.setEnabled(true);
+        stopButton.setEnabled(false);
+
+        // SharedPreferences에서 시간 초기화
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("stopwatchTime", 0);
+        editor.apply();
+    }
+
+    private void updateStopwatchText() {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int secs = seconds % 60;
+        String time = String.format("%02d:%02d:%02d", hours, minutes, secs);
+        stopwatchTextView.setText(time);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 액티비티가 종료될 때 센서 리스너 등록 해제
+        sensorManager.unregisterListener(this);
     }
 }
-
-
-
-
-
 /* 지우기 말기
 
 import android.util.Log;

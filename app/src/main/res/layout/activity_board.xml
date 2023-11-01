@@ -22,11 +22,11 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="centerInside"
-        android:src="@drawable/rank"
+        android:src="@drawable/ranking"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="18dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginRight="28dp"
         android:background="@android:color/transparent"
         tools:ignore="SpeakableTextPresentCheck" />
 

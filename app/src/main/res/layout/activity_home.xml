@@ -37,7 +37,7 @@
 
         <!-- HorizontalScrollView -->
         <HorizontalScrollView
-            android:layout_width="200dp"
+            android:layout_width="220dp"
             android:layout_height="50dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
@@ -60,17 +60,6 @@
                 tools:listitem="@layout/member_list_item" />
         </HorizontalScrollView>
 
-        <ImageView
-            android:id="@+id/editButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center|end"
-            android:layout_margin="6dp"
-            android:minHeight="48dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/pen"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-        <!-- ImageView -->
     </FrameLayout>
 
     <CalendarView
@@ -189,12 +178,10 @@
         android:layout_height="39dp"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottomLayout">
 
-
+        <!-- 할 일 항목1 레이아웃 -->
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -203,7 +190,7 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text=" 할 일 항목 1"
+            android:text="할 일 : A과제"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -225,10 +212,10 @@
         android:layout_height="39dp"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/bottomLayout"
-        tools:layout_editor_absoluteX="205dp"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottomLayout">
 
+        <!-- 목표 항목1 레이아웃 -->
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -237,7 +224,7 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text=" 목표 항목 1"
+            android:text="목표 : B자격증"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -254,27 +241,11 @@
             tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
-    <ToggleButton
-        android:id="@+id/toggleButton"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="76dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#DAD9D9"
-        android:checked="true"
-        android:textColor="@android:color/black"
-        android:textOff="주"
-        android:textOn="월"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <include
             layout="@layout/bottom"

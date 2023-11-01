@@ -1,0 +1,35 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- 앱 아이콘 이미지 -->
+    <ImageView
+        android:id="@+id/appIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+
+    <!-- 앱 이름 텍스트 -->
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:text="app1"
+        android:padding="10dp"/>
+
+    <!-- 토글 버튼 -->
+    <ToggleButton
+        android:id="@+id/appLockToggle"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/applock_toggle"
+        android:checked="false"
+        android:textOff=""
+        android:textOn=""
+        tools:ignore="TouchTargetSizeCheck" />
+</LinearLayout>
