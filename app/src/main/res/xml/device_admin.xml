@@ -1,0 +1,5 @@
+<device-admin>
+    <policies>
+        <watch-login />
+    </policies>
+</device-admin>

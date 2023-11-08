@@ -2,18 +2,26 @@ package com.cookandroid.studyapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -28,6 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyPageActivity extends AppCompatActivity {
+
+    private static final int REQUEST_ENABLE_ADMIN = 1;
+    private static final int REQUEST_PROVISION_PROFILE = 2;
 
     // FirebaseAuth 객체 가져오기
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -117,13 +128,62 @@ public class MyPageActivity extends AppCompatActivity {
         });
 
         Button appLock = findViewById(R.id.rockApps);
+        TextView removeDevAdmin = findViewById(R.id.removeDevAdmin);
 
         appLock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
+
+                        Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
+                        startActivity(intent);
+//                // Check if the timer is running, and if so, start LockInfoActivity
+//                if (TimerService.isTimerRunning()) {
+//                    Intent lockInfoIntent = new Intent(MyPageActivity.this, AppLockINGActivity.class);
+//                    startActivity(lockInfoIntent);
+//                } else {
+//                    ComponentName adminComponent = new ComponentName(MyPageActivity.this, MyDeviceAdminReceiver.class);
+//                    DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+//                    String packageName = getPackageName();
+//
+//                    boolean isAdminActive = devicePolicyManager.isAdminActive(adminComponent);
+//                    boolean isProfileOwnerApp = devicePolicyManager.isProfileOwnerApp(packageName);
+//
+//                    if (isAdminActive && isProfileOwnerApp) {
+//                        // 디바이스 관리자 권한 및 프로필 관리자 권한 모두 설정된 경우
+//                        Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
+//                        startActivity(intent);
+//                    } else {
+//                        // 권한이 설정되지 않은 경우 또는 하나 이상의 권한이 설정되지 않은 경우
+//                        if (!isAdminActive) {
+//                            // 디바이스 관리자 권한이 설정되지 않은 경우
+//                            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+//                            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
+//                            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "디바이스 관리자 권한 설명");
+//                            startActivityForResult(intent, 1); // 디바이스 관리자 권한 설정 화면 열기
+//                        }
+//                        if (!isProfileOwnerApp) {
+//                            // 프로필 관리자 권한이 설정되지 않은 경우
+//                            Intent intent = new Intent(DevicePolicyManager.ACTION_PROVISION_MANAGED_PROFILE);
+//                            intent.putExtra(DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME, adminComponent);
+//                            startActivityForResult(intent, REQUEST_PROVISION_PROFILE); // 프로필 관리자 권한 설정 화면 열기
+//                        }
+//                    }
+//                }
+            }
+        });
+
+        removeDevAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DevicePolicyManager mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+                ComponentName adminComponent = new ComponentName(MyPageActivity.this, MyDeviceAdminReceiver.class);
+
+                if (mDevicePolicyManager.isAdminActive(adminComponent)) {
+                    mDevicePolicyManager.removeActiveAdmin(adminComponent);
+                    String message = "기기 관리자 권한 해제 완료.";
+                    Toast.makeText(MyPageActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -411,4 +471,53 @@ public class MyPageActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            // 디바이스 관리자 권한 설정 화면으로부터 결과를 확인
+            if (resultCode == RESULT_OK) {
+                // 디바이스 관리자 권한이 설정됨
+                checkProfileOwnerPermission(); // 프로필 관리자 권한 확인
+            } else {
+                // 디바이스 관리자 권한 설정이 실패한 경우 또는 사용자가 취소한 경우
+                String message = "기기 관리자 권한 승인 실패. 앱 잠금 기능을 실행할 수 없습니다.";
+                Toast.makeText(MyPageActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == REQUEST_PROVISION_PROFILE) {
+            // 프로필 관리자 권한 설정 화면으로부터 결과를 확인
+            if (resultCode == RESULT_OK) {
+                // 프로필 관리자 권한이 설정됨
+                // 모든 권한이 설정되었으므로 AppLockActivity로 이동
+                Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
+                startActivity(intent);
+            } else {
+                // 프로필 관리자 권한 설정이 실패한 경우 또는 사용자가 취소한 경우
+                String message = "프로필 관리자 권한 승인 실패. 앱 잠금 기능을 실행할 수 없습니다.";
+                Toast.makeText(MyPageActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void checkProfileOwnerPermission() {
+        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName adminComponent = new ComponentName(MyPageActivity.this, MyDeviceAdminReceiver.class);
+        String packageName = getPackageName();
+        boolean isProfileOwnerApp = devicePolicyManager.isProfileOwnerApp(packageName);
+
+        if (!isProfileOwnerApp) {
+            // 프로필 관리자 권한이 설정되지 않은 경우
+            // 프로필 관리자 권한 설정 화면 열기
+            Intent intent = new Intent(DevicePolicyManager.ACTION_PROVISION_MANAGED_PROFILE);
+            intent.putExtra(DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME, adminComponent);
+            startActivityForResult(intent, REQUEST_PROVISION_PROFILE);
+        } else {
+            // 모든 권한이 설정되었으므로 AppLockActivity로 이동
+            Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
+            startActivity(intent);
+        }
+    }
+
 }

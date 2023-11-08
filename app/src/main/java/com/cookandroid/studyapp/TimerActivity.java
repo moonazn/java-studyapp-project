@@ -84,7 +84,15 @@ public class TimerActivity extends Activity {
 
         if (currentTimeMillis >= deadlineMillis) {
             // 디데이가 이미 지났을 경우
-            remainingTimeTextView.setText("디데이가 이미 지났습니다.");
+            long timePassed = currentTimeMillis - deadlineMillis;
+
+            // 지난 일수와 시간 계산
+            int daysPassed = (int) (timePassed / (1000 * 60 * 60 * 24));
+            int hoursPassed = (int) ((timePassed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            int minutesPassed = (int) ((timePassed % (1000 * 60 * 60)) / (1000 * 60));
+
+            String timePassedString = "디데이가 이미 " + daysPassed + "일 " + hoursPassed + "시간 " + minutesPassed + "분 지났습니다.";
+            remainingTimeTextView.setText(timePassedString);
         } else {
             // 디데이가 아직 도달하지 않은 경우, 디데이까지의 시간 계산
             long timeRemaining = deadlineMillis - currentTimeMillis;

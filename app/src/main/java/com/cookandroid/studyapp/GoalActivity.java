@@ -1,93 +1,101 @@
 package com.cookandroid.studyapp;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.material.textfield.TextInputLayout;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class GoalActivity extends AppCompatActivity {
-
-    private DatePicker datePicker;
-    private TextView textViewSelectedDate;
-    private Button buttonConfirm;
-    private EditText et_memo;
+    private EditText etGoalMemo;
+    private ListView listViewGoals;
     private ArrayList<String> goalList;
-    private ArrayAdapter<String> adapter;
-    private TextInputLayout textInputLayout;
+    private ArrayAdapter<String> goalAdapter;
+    private Button buttonAddGoal;
+    private int maxMemoLength = 20;
+
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal);
 
-        datePicker = findViewById(R.id.datePicker);
-        textViewSelectedDate = findViewById(R.id.textViewSelectedDate);
-        buttonConfirm = findViewById(R.id.buttonConfirm);
-        et_memo = findViewById(R.id.et_memo);
-        textInputLayout = findViewById(R.id.textInputLayout);
-        textInputLayout.setVisibility(View.GONE); // 처음에는 숨김
+        etGoalMemo = findViewById(R.id.etGoalMemo);
+        listViewGoals = findViewById(R.id.listViewGoals);
+        buttonAddGoal = findViewById(R.id.buttonAddGoal);
 
-        // 목표 목록을 저장하기 위한 ArrayList 및 어댑터를 초기화
-        goalList = new ArrayList<>();  // 목표 목록을 저장하는 ArrayList 초기화
-        adapter = new ArrayAdapter<>( // 목표 목록을 표시할 어댑터 초기화
-                this,
-                android.R.layout.simple_list_item_1, // 간단한 텍스트 뷰를 사용하는 레이아웃
-                goalList       // 표시할 목표 목록 데이터
-        );
+        goalList = new ArrayList<>();
+        goalAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goalList);
+        listViewGoals.setAdapter(goalAdapter);
 
+        // Firebase Realtime Database 초기화
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("goals");
 
-        // 확인 버튼에 대한 클릭 리스너를 설정
-        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+        etGoalMemo.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                int year = datePicker.getYear();
-                int month = datePicker.getMonth() + 1;
-                int day = datePicker.getDayOfMonth();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
-                String selectedDate = "선택된 날짜: " + year + "년 " + month + "월 " + day + "일";
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > maxMemoLength) {
+                    etGoalMemo.setText(charSequence.subSequence(0, maxMemoLength));
+                    etGoalMemo.setSelection(maxMemoLength);
+                    Toast.makeText(GoalActivity.this, "최대 " + maxMemoLength + "글자까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-                // TextView에 선택된 날짜를 표시
-                textViewSelectedDate.setText(selectedDate);
-
-                // TextInputLayout을 보이도록 설정
-                textInputLayout.setVisibility(View.VISIBLE);
+            @Override
+            public void afterTextChanged(Editable editable) {
             }
         });
 
-        // 목표 추가 버튼에 대한 클릭 리스너를 설정
-        Button buttonAddGoal = findViewById(R.id.buttonAddGoal);
         buttonAddGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String memo = et_memo.getText().toString();
+                String memo = etGoalMemo.getText().toString().trim();
                 if (!memo.isEmpty()) {
-                    goalList.add(memo);
-                    adapter.notifyDataSetChanged();
-                    et_memo.setText("");
-                    textInputLayout.setVisibility(View.GONE); // 팝업 창 닫기
+                    // Firebase Realtime Database에 목표 추가
+                    String goalId = databaseReference.push().getKey();
+                    databaseReference.child(goalId).setValue(memo);
+                    goalList.add(memo); // 목표 목록에도 추가
+                    goalAdapter.notifyDataSetChanged(); // 어댑터에 데이터 변경을 알림
+
+                    etGoalMemo.setText("");
                 } else {
-                    Toast.makeText(GoalActivity.this, "메모를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoalActivity.this, "목표를 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        // "나의 목표 리스트" 버튼에 대한 클릭 리스너 추가
-        Button buttonGoToGoalList = findViewById(R.id.buttonGoToGoal);
-        buttonGoToGoalList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(GoalActivity.this, ListActivity.class);
-                startActivity(intent);
-            }
-        });
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 상단 텍스트뷰 -->
     <TextView
         android:id="@+id/text_view_id"
         android:layout_width="wrap_content"
@@ -20,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- FrameLayout 영역 -->
     <FrameLayout
         android:layout_width="236dp"
         android:layout_height="60dp"
@@ -35,7 +33,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_id">
 
-        <!-- HorizontalScrollView -->
         <HorizontalScrollView
             android:layout_width="220dp"
             android:layout_height="50dp"
@@ -46,7 +43,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/memberRecyclerView"
                 android:layout_width="100dp"
@@ -59,7 +55,6 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/member_list_item" />
         </HorizontalScrollView>
-
     </FrameLayout>
 
     <CalendarView
@@ -85,7 +80,6 @@
         app:layout_constraintTop_toBottomOf="@+id/calendarViewMonthly">
     </LinearLayout>
 
-    <!-- 목록 레이아웃 -->
     <LinearLayout
         android:id="@+id/bottomLayout"
         android:layout_width="0dp"
@@ -105,7 +99,6 @@
             android:layout_marginEnd="8dp"
             android:orientation="horizontal">
 
-            <!-- 할 일 추가 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -126,7 +119,7 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/plus_additional"
+                    android:id="@+id/plus_additional1"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:clickable="true"
@@ -141,7 +134,6 @@
             android:layout_width="20dp"
             android:layout_height="20dp" />
 
-        <!-- 목표 추가 -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -174,7 +166,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="190dp"
+        android:layout_width="200dp"
         android:layout_height="39dp"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
@@ -185,20 +177,23 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/blue_dot" />
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="할 일 : A과제"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <!-- 할 일을 표시할 ListView -->
+        <ListView
+            android:id="@+id/taskListView"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/bottomLayout"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageView
             android:id="@+id/stopwatch"
             android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_height="19dp"
+            android:layout_marginTop="13dp"
             android:clickable="true"
             android:contentDescription="Stopwatch"
             android:focusable="true"
@@ -208,7 +203,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="190dp"
+        android:layout_width="200dp"
         android:layout_height="39dp"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
@@ -219,20 +214,23 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/blue_dot" />
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="목표 : B자격증"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <!-- 목표를 표시할 ListView -->
+        <ListView
+            android:id="@+id/goalListView"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/bottomLayout"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageView
             android:id="@+id/timer"
             android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_height="19dp"
+            android:layout_marginTop="13dp"
             android:clickable="true"
             android:contentDescription="Timer"
             android:focusable="true"

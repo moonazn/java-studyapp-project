@@ -7,29 +7,33 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/etGoalMemo"
+        android:id="@+id/etNewTask"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter a new goal"
-        app:layout_constraintStart_toStartOf="parent"
+        android:hint="Enter a new task"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/buttonAddGoal"
+        android:id="@+id/btnAddTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Goal"
-        app:layout_constraintTop_toBottomOf="@+id/etGoalMemo"
+        android:text="Add Task"
+        app:layout_constraintTop_toBottomOf="@+id/etNewTask"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+
     <ListView
-        android:id="@+id/listViewGoals"
+        android:id="@+id/listViewTasks"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonAddGoal" />
+        app:layout_constraintTop_toBottomOf="@+id/btnAddTask" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

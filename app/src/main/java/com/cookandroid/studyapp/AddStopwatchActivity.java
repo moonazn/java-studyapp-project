@@ -1,7 +1,10 @@
 package com.cookandroid.studyapp;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,7 +15,10 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Calendar;
 
 public class AddStopwatchActivity extends AppCompatActivity implements SensorEventListener {
     private TextView stopwatchTextView;
@@ -24,6 +30,17 @@ public class AddStopwatchActivity extends AppCompatActivity implements SensorEve
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private boolean isFaceDown = false;
+
+    private final BroadcastReceiver alarmReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // 알람이 울릴 때마다 스톱워치 초기화
+            SharedPreferences sharedPreferences = context.getSharedPreferences("StopwatchPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("stopwatchTime", 0);
+            editor.apply();
+        }
+    };
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -38,11 +55,15 @@ public class AddStopwatchActivity extends AppCompatActivity implements SensorEve
 
         sharedPreferences = getSharedPreferences("StopwatchPrefs", MODE_PRIVATE);
 
-        // 시간 읽기
-        int initialTime = sharedPreferences.getInt("stopwatchTime", 0);
-        seconds = initialTime;
-        updateStopwatchText();
+        // 알람을 받기 위한 BroadcastReceiver 등록
+        IntentFilter filter = new IntentFilter("your_alarm_action");
+        registerReceiver(alarmReceiver, filter);
 
+        // 센서 매니저 및 리스너 초기화
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        // 버튼 리스너 설정
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,12 +85,10 @@ public class AddStopwatchActivity extends AppCompatActivity implements SensorEve
             }
         });
 
-        // 센서 매니저 초기화
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        // 센서 리스너 등록
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        // SharedPreferences에서 스톱워치 시간 로드
+        int initialTime = sharedPreferences.getInt("stopwatchTime", 0);
+        seconds = initialTime;
+        updateStopwatchText();
     }
 
     @Override
@@ -130,6 +149,9 @@ public class AddStopwatchActivity extends AppCompatActivity implements SensorEve
         isRunning = false;
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
+
+        // 토스트 메시지를 띄웁니다.
+        showToast("스톱워치가 멈췄습니다.");
     }
 
     private void resetStopwatch() {
@@ -153,10 +175,16 @@ public class AddStopwatchActivity extends AppCompatActivity implements SensorEve
         stopwatchTextView.setText(time);
     }
 
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 액티비티가 종료될 때 센서 리스너 등록 해제
+        // 액티비티 종료 시 BroadcastReceiver 해제
+        unregisterReceiver(alarmReceiver);
+        // 센서 리스너 등록 해제
         sensorManager.unregisterListener(this);
     }
 }

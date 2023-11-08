@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Remaining Time TextView -->
+    <TextView
+        android:id="@+id/remainingTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="앱 잠금 종료까지: 00시간 00분"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="> 현재 사용 가능한 앱: "
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="15dp"/>
+
+    <!-- Available Apps List -->
+    <ListView
+        android:id="@+id/availableAppsListView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/remainingTimeTextView"
+        android:layout_marginTop="100dp" />
+
+
+    <Button
+        android:id="@+id/stopLockButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="앱 잠금 종료하기"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_marginTop="550dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/backButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="BACK"
+        android:textSize="18dp"
+        android:layout_marginTop="610dp"/>
+
+</RelativeLayout>

@@ -21,15 +21,14 @@
         android:text="app1"
         android:padding="10dp"/>
 
-    <!-- 토글 버튼 -->
-    <ToggleButton
-        android:id="@+id/appLockToggle"
+    <!-- 버튼 -->
+    <ImageView
+        android:id="@+id/appSelect"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="20dp"
-        android:background="@drawable/applock_toggle"
-        android:checked="false"
-        android:textOff=""
-        android:textOn=""
-        tools:ignore="TouchTargetSizeCheck" />
+        android:layout_marginTop="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/lock"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 </LinearLayout>

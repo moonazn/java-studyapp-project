@@ -128,6 +128,20 @@
         android:backgroundTint="#6CFFFFFF"
         android:layout_marginTop="150dp"/>
 
+    <TextView
+        android:id="@+id/removeDevAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="30dp"
+        android:text="디바이스 관리자 권한 해제"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:textColor="#5858FA"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rockApps"
+        tools:ignore="TextSizeCheck" />
+
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="100dp"
