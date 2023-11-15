@@ -43,7 +43,7 @@
             android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="  해당 랭킹은 최근 7일 동안 각 스터디의 멤버들의 공부 시간을 합산하여 매겨진 순위입니다. \n매일 12시에 갱신됩니다."
+            android:text="  해당 랭킹은 최근 7일 동안 각 스터디의 멤버들의 공부 시간을 합산하여 매겨진 순위입니다. \n매일 오전 2시에 갱신됩니다."
             android:textSize="15dp"
             android:textStyle="italic"
             app:layout_constraintLeft_toLeftOf="parent"

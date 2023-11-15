@@ -2,21 +2,18 @@ package com.cookandroid.studyapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -48,6 +45,8 @@ public class MyPageActivity extends AppCompatActivity {
     static String nickname = ""; // 닉네임을 저장할 변수
 
     static String groupKey = "";
+
+    int praisePoint = 0;
     private TextView helloText;
 
     private MemberAdapter memberAdapter;
@@ -61,15 +60,15 @@ public class MyPageActivity extends AppCompatActivity {
 
         ImageView editImage = findViewById(R.id.editButton);
 
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users").child("-"+uid);
 
         // 사용자의 UID를 기반으로 해당 사용자의 닉네임 가져오기
         if (nickname.equals("")) {
-            usersRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        nickname = dataSnapshot.getValue(String.class);
+                        nickname = dataSnapshot.child("nickname").getValue(String.class);
                         Log.d("test", "nickname: " + nickname);
 
                         // 데이터를 가져온 후에 UI를 업데이트
@@ -95,6 +94,35 @@ public class MyPageActivity extends AppCompatActivity {
             // 스터디 멤버 리스트 업데이트
             getGroupKeyForUser(nickname);
         }
+
+        ImageView info = findViewById(R.id.info);
+        TextView praisePointTextView = findViewById(R.id.praisePoints);
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showExplanationPopup();
+            }
+        });
+
+        // Firebase Realtime Database에서 사용자의 칭찬 점수를 읽어옵니다.
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("-"+uid).child("praisePoints");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot에서 칭찬 점수를 가져와서 설정
+                    praisePoint = dataSnapshot.getValue(Integer.class);
+                }
+                praisePointTextView.setText("나의 칭찬점수 : " + praisePoint);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // 에러 처리
+            }
+        });
+
 
         TextView editFinish = findViewById(R.id.editFinish);
 
@@ -134,41 +162,41 @@ public class MyPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                        Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
-                        startActivity(intent);
-//                // Check if the timer is running, and if so, start LockInfoActivity
-//                if (TimerService.isTimerRunning()) {
-//                    Intent lockInfoIntent = new Intent(MyPageActivity.this, AppLockINGActivity.class);
-//                    startActivity(lockInfoIntent);
-//                } else {
-//                    ComponentName adminComponent = new ComponentName(MyPageActivity.this, MyDeviceAdminReceiver.class);
-//                    DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-//                    String packageName = getPackageName();
-//
-//                    boolean isAdminActive = devicePolicyManager.isAdminActive(adminComponent);
-//                    boolean isProfileOwnerApp = devicePolicyManager.isProfileOwnerApp(packageName);
-//
-//                    if (isAdminActive && isProfileOwnerApp) {
-//                        // 디바이스 관리자 권한 및 프로필 관리자 권한 모두 설정된 경우
 //                        Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
 //                        startActivity(intent);
-//                    } else {
-//                        // 권한이 설정되지 않은 경우 또는 하나 이상의 권한이 설정되지 않은 경우
-//                        if (!isAdminActive) {
-//                            // 디바이스 관리자 권한이 설정되지 않은 경우
-//                            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-//                            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
-//                            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "디바이스 관리자 권한 설명");
-//                            startActivityForResult(intent, 1); // 디바이스 관리자 권한 설정 화면 열기
-//                        }
-//                        if (!isProfileOwnerApp) {
-//                            // 프로필 관리자 권한이 설정되지 않은 경우
-//                            Intent intent = new Intent(DevicePolicyManager.ACTION_PROVISION_MANAGED_PROFILE);
-//                            intent.putExtra(DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME, adminComponent);
-//                            startActivityForResult(intent, REQUEST_PROVISION_PROFILE); // 프로필 관리자 권한 설정 화면 열기
-//                        }
-//                    }
-//                }
+                // Check if the timer is running, and if so, start LockInfoActivity
+                if (TimerService.isTimerRunning()) {
+                    Intent lockInfoIntent = new Intent(MyPageActivity.this, AppLockINGActivity.class);
+                    startActivity(lockInfoIntent);
+                } else {
+                    ComponentName adminComponent = new ComponentName(MyPageActivity.this, MyDeviceAdminReceiver.class);
+                    DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+                    String packageName = getPackageName();
+
+                    boolean isAdminActive = devicePolicyManager.isAdminActive(adminComponent);
+                    boolean isProfileOwnerApp = devicePolicyManager.isProfileOwnerApp(packageName);
+
+                    if (isAdminActive && isProfileOwnerApp) {
+                        // 디바이스 관리자 권한 및 프로필 관리자 권한 모두 설정된 경우
+                        Intent intent = new Intent(MyPageActivity.this, AppLockActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // 권한이 설정되지 않은 경우 또는 하나 이상의 권한이 설정되지 않은 경우
+                        if (!isAdminActive) {
+                            // 디바이스 관리자 권한이 설정되지 않은 경우
+                            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
+                            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "디바이스 관리자 권한 설명");
+                            startActivityForResult(intent, 1); // 디바이스 관리자 권한 설정 화면 열기
+                        }
+                        if (!isProfileOwnerApp) {
+                            // 프로필 관리자 권한이 설정되지 않은 경우
+                            Intent intent = new Intent(DevicePolicyManager.ACTION_PROVISION_MANAGED_PROFILE);
+                            intent.putExtra(DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME, adminComponent);
+                            startActivityForResult(intent, REQUEST_PROVISION_PROFILE); // 프로필 관리자 권한 설정 화면 열기
+                        }
+                    }
+                }
             }
         });
 
@@ -424,11 +452,12 @@ public class MyPageActivity extends AppCompatActivity {
         // Firebase Realtime Database 참조 가져오기
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
+
         // 그룹에서 사용자 제거
         removeUserFromGroups(nickname);
 
         // 해당 사용자의 정보를 삭제
-        usersRef.child(userUid).removeValue()
+        usersRef.child(uid).removeValue()
                 .addOnSuccessListener(aVoid -> {
                     // 사용자 정보 삭제 성공
                     Log.d("test", "탈퇴 완료 및 사용자 정보 삭제 성공");
@@ -439,7 +468,28 @@ public class MyPageActivity extends AppCompatActivity {
                     Log.d("test", "사용자 정보 삭제 실패");
                 });
     }
+    private void showExplanationPopup() {
+        // LayoutInflater를 사용하여 레이아웃을 가져옴
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.praise_info_popup_layout, null);
 
+        // AlertDialog 생성
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(popupView);
+        AlertDialog alertDialog = builder.create();
+
+        // 팝업 창의 닫기 버튼에 대한 클릭 리스너 설정
+        Button closeButton = popupView.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        // 팝업 창 표시
+        alertDialog.show();
+    }
     private void removeUserFromGroups(String nickname) {
         // Firebase Realtime Database 참조 가져오기
         DatabaseReference groupsRef = FirebaseDatabase.getInstance().getReference("Group");

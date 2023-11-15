@@ -55,7 +55,7 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 업로드할 데이터를 가져옵니다.
-                String userId = currentUser.getUid();
+                String userId = "-" + currentUser.getUid();
                 String photoTitle = photoTitleEditText.getText().toString();
                 Long uploadTime = System.currentTimeMillis(); // 업로드 시간을 현재 시간으로 설정
 

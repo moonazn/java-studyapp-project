@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/popup_dialog.xml -->
+<!-- res/layout/popup_dialog.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/popupTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="팝업 타이틀" />
+
+    <Button
+        android:id="@+id/closePopupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/popupTextView"
+        android:text="닫기" />
+</RelativeLayout>
+

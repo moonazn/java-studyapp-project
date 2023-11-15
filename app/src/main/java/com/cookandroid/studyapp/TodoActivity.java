@@ -3,6 +3,7 @@ package com.cookandroid.studyapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -73,6 +74,10 @@ public class TodoActivity extends AppCompatActivity {
                     String taskId = databaseReference.push().getKey();
                     databaseReference.child(taskId).setValue(newTask);
                     etNewTask.setText("");
+
+                    Intent intent = new Intent(TodoActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
                 } else {
                     Toast.makeText(TodoActivity.this, "Please enter a task.", Toast.LENGTH_SHORT).show();
                 }

@@ -60,7 +60,7 @@ public class JoinInfoActivity extends AppCompatActivity {
                                 message.setText("이미 사용 중인 닉네임입니다.");
                             } else {
                                 // 중복되지 않는 닉네임인 경우
-                                usersRef.child(userId).setValue(nickname);
+                                usersRef.child("-" + userId).child("nickname").setValue(nickname);
                                 addMemberToDefaultGroup(nickname);
 
                                 Intent intent = new Intent(JoinInfoActivity.this, MemberAddActivity.class);

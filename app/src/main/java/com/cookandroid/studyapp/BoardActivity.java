@@ -65,7 +65,7 @@ public class BoardActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    String userNickname = dataSnapshot.getValue(String.class);
+                                    String userNickname = dataSnapshot.child("nickname").getValue(String.class);
                                     // 유저의 닉네임을 업로드 데이터에 설정합니다.
                                     uploadData.setUser_id(userNickname);
                                     // 업로드 데이터를 리스트에 추가
@@ -73,8 +73,10 @@ public class BoardActivity extends AppCompatActivity {
 
                                     // 로그에 유저 닉네임과 업로드 데이터 제목을 출력
                                     Log.d("FirebaseData", "User Nickname: " + userNickname + ", Title: " + uploadData.getPhoto_title());
+
+                                    // 데이터 변경 후 스크롤
                                     postAdapter.notifyDataSetChanged();
-                                    recyclerView.scrollToPosition(0);       // 이게 왜 작동이 안되지??????⭐️
+                                    recyclerView.post(() -> recyclerView.scrollToPosition(0));
                                 }
                             }
 
@@ -92,6 +94,7 @@ public class BoardActivity extends AppCompatActivity {
                 // 데이터 가져오기 실패 또는 오류 처리
             }
         });
+
 
 
         Button upload = findViewById(R.id.uploadButton);

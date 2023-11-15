@@ -12,18 +12,30 @@
         android:layout_height="wrap_content"
         android:text="My Calendar"
         android:textColor="@android:color/black"
-        android:textSize="22sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
+    <TextView
+        android:id="@+id/penaltyCalc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="벌금 계산기"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
     <FrameLayout
         android:layout_width="236dp"
         android:layout_height="60dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="30dp"
         android:background="#EFEFEF"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,11 +69,12 @@
         </HorizontalScrollView>
     </FrameLayout>
 
+
     <CalendarView
         android:id="@+id/calendarViewMonthly"
         android:layout_width="408dp"
         android:layout_height="305dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="66dp"
         android:showWeekNumber="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -72,7 +85,7 @@
         android:id="@+id/goalContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -84,7 +97,7 @@
         android:id="@+id/bottomLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,13 +114,14 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:backgroundTint="#D3D3D3"
                 android:clickable="true"
                 android:focusable="true"
                 android:minHeight="48dp"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="8dp"
+                tools:ignore="TouchTargetSizeCheck">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -136,13 +150,14 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:backgroundTint="#D3D3D3"
             android:clickable="true"
             android:focusable="true"
             android:minHeight="48dp"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:padding="8dp"
+            tools:ignore="TouchTargetSizeCheck">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -163,12 +178,49 @@
                 android:onClick="onAdditionalGoalClick"
                 android:src="@drawable/plus" />
         </LinearLayout>
+
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="#D3D3D3"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="48dp"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            tools:ignore="TouchTargetSizeCheck">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="  시간 측정  "
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/plus_additional3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:clickable="true"
+                android:contentDescription="TIME"
+                android:focusable="true"
+                android:onClick="onAdditionalGoalClick"
+                android:src="@drawable/plus" />
+        </LinearLayout>
     </LinearLayout>
 
+
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="160dp"
         android:layout_height="39dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="14dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottomLayout">
@@ -183,29 +235,19 @@
         <!-- 할 일을 표시할 ListView -->
         <ListView
             android:id="@+id/taskListView"
-            android:layout_width="140dp"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/bottomLayout"
             tools:ignore="TouchTargetSizeCheck" />
 
-        <ImageView
-            android:id="@+id/stopwatch"
-            android:layout_width="24dp"
-            android:layout_height="19dp"
-            android:layout_marginTop="13dp"
-            android:clickable="true"
-            android:contentDescription="Stopwatch"
-            android:focusable="true"
-            android:onClick="onAdditionalWatchClick"
-            android:src="@drawable/stopwatch"
-            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="230dp"
         android:layout_height="39dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="4dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottomLayout">
@@ -220,23 +262,22 @@
         <!-- 목표를 표시할 ListView -->
         <ListView
             android:id="@+id/goalListView"
-            android:layout_width="140dp"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/bottomLayout"
             tools:ignore="TouchTargetSizeCheck" />
 
-        <ImageView
-            android:id="@+id/timer"
-            android:layout_width="24dp"
-            android:layout_height="19dp"
-            android:layout_marginTop="13dp"
-            android:clickable="true"
-            android:contentDescription="Timer"
-            android:focusable="true"
-            android:onClick="onAdditionalTimerClick"
-            android:src="@drawable/timer"
-            tools:ignore="TouchTargetSizeCheck" />
+        <TextView
+            android:layout_width="65dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="4dp"
+            android:text="D-"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

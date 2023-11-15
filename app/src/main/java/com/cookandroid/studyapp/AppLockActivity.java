@@ -125,8 +125,8 @@ public class AppLockActivity extends AppCompatActivity {
 
                 // "timePicker"에서 선택한 시간을 가져오는 코드
                 TimePicker timePicker = findViewById(R.id.timePicker);
-                int hour = timePicker.getHour();
-                int minute = timePicker.getMinute();
+                int hour = timePicker.getCurrentHour();
+                int minute = timePicker.getCurrentMinute();
 
                 // 현재 시간을 가져오는 코드
                 Calendar calendar = Calendar.getInstance();

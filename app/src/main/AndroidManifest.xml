@@ -8,9 +8,26 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyApp"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".WizeSayingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PracticeMissionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NumCalcActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PenaltyCalcActivity"
+            android:exported="false" />
         <activity
             android:name=".AppLockINGActivity"
             android:exported="false" />
@@ -31,16 +48,13 @@
         </receiver>
 
         <activity
-            android:name=".TimerActivity"
-            android:exported="false" />
-        <activity
             android:name=".AppLockActivity"
             android:exported="false" />
         <activity
             android:name=".RankActivity"
             android:exported="false" />
         <activity
-            android:name=".AddStopwatchActivity"
+            android:name=".StopwatchActivity"
             android:exported="false" />
         <activity
             android:name=".GoalActivity"
@@ -53,9 +67,6 @@
             android:exported="false" />
         <activity
             android:name=".TodoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".StopwatchActivity"
             android:exported="false" />
         <activity
             android:name=".UploadActivity"
@@ -84,6 +95,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".AlarmReceiver" />
+
+        <service
+            android:name=".AlarmService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

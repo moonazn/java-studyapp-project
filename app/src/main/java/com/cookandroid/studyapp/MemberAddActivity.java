@@ -44,18 +44,10 @@ public class MemberAddActivity extends AppCompatActivity {
 
                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
-                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                usersRef.orderByChild("nickname").equalTo(newMember).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        boolean userExists = false;
-
-                        for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                            String nickname = userSnapshot.getValue(String.class);
-                            if (nickname != null && nickname.equals(newMember)) {
-                                userExists = true;
-                                break;
-                            }
-                        }
+                        boolean userExists = dataSnapshot.exists();
 
                         if (userExists) {
                             // 존재하는 유저인 경우 처리
@@ -73,6 +65,7 @@ public class MemberAddActivity extends AppCompatActivity {
                 });
             }
         });
+
 
         newGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,7 +6,6 @@ import static com.cookandroid.studyapp.MyPageActivity.groupKey;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -116,7 +115,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         String authorUid = dataSnapshot.child("user_id").getValue(String.class);
                         // authorUid에 게시물의 작성자 UID가 저장됩니다.
 
-                        if (currentUserUid.equals(authorUid)) {
+                        String currentUid = "-" + currentUserUid;
+                        if (currentUid.equals(authorUid)) {
                             Log.d(TAG, "bind: 작성자 O");
                             // 현재 사용자가 게시물의 작성자인 경우에만 삭제 버튼 표시
                             deleteImageView.setVisibility(View.VISIBLE);
@@ -190,12 +190,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                 }
 
                             });
-                        } else {
+                        }else {
                             // 현재 사용자가 게시물의 작성자가 아닌 경우 삭제 버튼 숨김
                             deleteImageView.setVisibility(View.GONE);
                             Log.d(TAG, "bind: 작성자 X");
-                            Log.d(TAG, "bind: "+currentUserUid+" vs "+authorUid);
+
                         }
+
+                    }else {
+                        // 현재 사용자가 게시물의 작성자가 아닌 경우 삭제 버튼 숨김
+                        deleteImageView.setVisibility(View.GONE);
+                        Log.d(TAG, "bind: 작성자 X");
 
                     }
                 }
@@ -206,13 +211,46 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             });
 
+            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+
             heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (heart.isChecked()) {
-                        // ToggleButton이 선택된 상태일 때의 동작
-                        // (하트가 선택된 경우)
-                        Toast.makeText(context, "하트가 선택되었습니다.", Toast.LENGTH_SHORT).show();
+                        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Group/" + groupKey + "/uploads/" + uploadData.getPost_id() + "/user_id");
+                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    String userUid = dataSnapshot.getValue(String.class);
+
+                                    DatabaseReference praisePointsRef = usersRef.child(userUid).child("praisePoints");
+
+                                    praisePointsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (!dataSnapshot.exists()) {
+                                                praisePointsRef.setValue(1);
+                                            } else {
+                                                int currentPraisePoints = dataSnapshot.getValue(Integer.class);
+                                                praisePointsRef.setValue(currentPraisePoints + 1);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            // 에러 처리
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                // 에러 처리
+                            }
+                        });
+                        Toast.makeText(context, "칭찬점수 +1", Toast.LENGTH_SHORT).show();
                     } else {
                         // ToggleButton이 선택되지 않은 상태일 때의 동작
                         // (하트가 선택되지 않은 경우)
@@ -220,6 +258,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     }
                 }
             });
+
+
 
 
         }

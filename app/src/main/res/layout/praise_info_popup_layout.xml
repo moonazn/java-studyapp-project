@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
+    android:orientation="vertical">
+
+    <!-- 팝업 창에 보여줄 내용 추가 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="칭찬점수란?"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="피드 창에서 서로의 게시물에 대해 ❤(응원)를 누르면, ❤️를 받은 유저의 칭찬 점수가 1씩 올라갑니다. ❤는 계속 누를 수 있으니 서로가 열심히 공부하는 모습을 보고 응원하는 마음을 전해보세요!" />
+
+    <!-- 닫기 버튼 -->
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="OK!" />
+</LinearLayout>

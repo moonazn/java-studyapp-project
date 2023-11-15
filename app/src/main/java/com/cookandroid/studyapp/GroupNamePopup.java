@@ -93,7 +93,7 @@ public class GroupNamePopup extends Dialog {
 
                                 // 업로드 데이터에 있는 유저 UID를 사용하여 유저 닉네임을 가져옵니다.
                                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-                                usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                usersRef.child(userId).child("nickname").addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists()) {
