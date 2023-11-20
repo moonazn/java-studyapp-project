@@ -59,15 +59,15 @@
             android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="벌금 조건 : \n매일 공부인증 2건 이상 하지 않을 시 => 500원"
+            android:text="벌금 조건 "
             android:textSize="15dp"
             android:textColor="@color/black"
-            android:textStyle="italic"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:gravity="center"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/titleImage"
+            app:layout_constraintTop_toTopOf="@+id/frameLayout"
             tools:ignore="TextSizeCheck" />
+
 
     </android.widget.FrameLayout>
 
@@ -86,11 +86,4 @@
         android:paddingEnd="16dp"
         android:overScrollMode="never"
         tools:listitem="@layout/member_list_item2" />
-
-
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

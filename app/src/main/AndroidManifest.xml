@@ -14,7 +14,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".WizeSayingActivity"
+            android:name=".WiseSayingActivity"
             android:exported="false" />
         <activity
             android:name=".PracticeMissionActivity"
@@ -57,9 +57,6 @@
             android:name=".StopwatchActivity"
             android:exported="false" />
         <activity
-            android:name=".GoalActivity"
-            android:exported="false" />
-        <activity
             android:name=".JoinInfoActivity"
             android:exported="false" />
         <activity
@@ -76,6 +73,9 @@
             android:exported="false" />
         <activity
             android:name=".AlarmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AlarmPlusActivity"
             android:exported="false" />
         <activity
             android:name=".BoardActivity"
@@ -95,6 +95,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".AlarmReceiver" />
 
         <service

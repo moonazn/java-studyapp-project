@@ -4,6 +4,7 @@ import static com.cookandroid.studyapp.MyPageActivity.groupKey;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,12 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
     private List<String> memberList;
     private boolean isEditMode = false; // 편집 모드 여부
     private List<ViewHolder> holders = new ArrayList<>(); // ViewHolder 객체를 저장할 리스트
+    private OnMemberClickListener onMemberClickListener;
+
+
+    public interface OnMemberClickListener {
+        void onMemberClick(String uid);
+    }
 
 
     public MemberAdapter(List<String> memberList) {
@@ -67,6 +77,10 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             }
         }
     }
+    // 클릭 리스너를 설정하는 메서드
+    public void setOnMemberClickListener(OnMemberClickListener listener) {
+        this.onMemberClickListener = listener;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView memberName;
@@ -96,6 +110,17 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
 //                        notifyItemRemoved(position);
                         showDeleteConfirmationDialog(position, itemView);
 
+                    }
+                }
+            });
+
+            // 클릭 이벤트 처리
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && onMemberClickListener != null) {
+                        onMemberClickListener.onMemberClick(memberList.get(position));
                     }
                 }
             });

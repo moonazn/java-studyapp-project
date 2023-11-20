@@ -13,7 +13,7 @@
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Question: 12+23"
+        android:text="문제: "
         android:textSize="24sp"
         />
 
@@ -21,7 +21,7 @@
         android:id="@+id/resultEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Enter your answer"
+        android:hint="답을 입력하세요"
         android:inputType="number"
         />
 
@@ -29,6 +29,6 @@
         android:id="@+id/answerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit Answer"
+        android:text="답 제출"
         />
 </LinearLayout>

@@ -31,18 +31,11 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        // Firebase 초기화
-        FirebaseApp.initializeApp(this);
-
-        // reCAPTCHA 설정 추가
-        FirebaseAuth.getInstance().getFirebaseAuthSettings()
-                .setAppVerificationDisabledForTesting(true);
-
-
         if (currentUser != null) {
             // 사용자가 로그인한 경우, Home 화면으로 이동
-            Intent homeIntent = new Intent(this, HomeActivity.class);
+            Intent homeIntent = new Intent(this, MyPageActivity.class);
             startActivity(homeIntent);
+            overridePendingTransition(0, 0);
         }
 
         final EditText emailEditText = findViewById(R.id.email_area);
@@ -68,20 +61,29 @@ public class MainActivity extends AppCompatActivity {
                                         // 로그인 성공
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+
+                                        // 로그인 성공 시에만 화면 전환
+                                        Intent intent = new Intent(MainActivity.this, MemberAddActivity.class);
+                                        startActivity(intent);
                                     } else {
                                         // 로그인 실패
-                                        Toast.makeText(MainActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                                        if (task.getException() != null) {
+                                            String errorMessage = task.getException().getMessage();
+                                            if (errorMessage.contains("There is no user record corresponding to this identifier")) {
+                                                // 사용자가 존재하지 않는 경우
+                                                message.setText("존재하지 않는 사용자입니다.");
+                                            } else {
+                                                // 다른 로그인 실패 경우
+                                                Toast.makeText(MainActivity.this, "로그인 실패: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
                                     }
                                 }
                             });
-                    // 화면 전환을 위한 Intent 생성
-                    Intent intent = new Intent(MainActivity.this, MemberAddActivity.class);
-
-                    // Intent를 사용하여 화면을 전환합니다.
-                    startActivity(intent);
 
                 }
             }
+
         });
 
         TextView joinButton = findViewById(R.id.join_button);

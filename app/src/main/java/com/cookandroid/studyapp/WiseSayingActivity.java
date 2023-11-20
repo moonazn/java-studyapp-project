@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Random;
 
-public class WizeSayingActivity extends AppCompatActivity {
+public class WiseSayingActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private ImageView photoImageView;
@@ -28,7 +28,7 @@ public class WizeSayingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wize_saying);
+        setContentView(R.layout.activity_wise_saying);
 
         photoImageView = findViewById(R.id.photoImageView);
         Button captureButton = findViewById(R.id.captureButton);

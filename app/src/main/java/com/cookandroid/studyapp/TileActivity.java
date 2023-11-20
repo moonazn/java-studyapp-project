@@ -5,14 +5,14 @@ import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TileActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private long startTime = 0;
     private Button[] buttons;
-    private final StringBuilder numbers = new StringBuilder();
+    private List<Integer> numbers = new ArrayList<>();
     private int currentNumber = 1;
     private int ButtonCount = 25;
 
@@ -34,16 +34,14 @@ public class TileActivity extends AppCompatActivity implements View.OnClickListe
         };
 
         for (int i = 1; i <= 25; i++) {
-            numbers.append(i).append(" ");
+            numbers.add(i);
         }
 
-        // Shuffle the numbers
-        List<String> numberList = Arrays.asList(numbers.toString().split(" "));
-        Collections.shuffle(numberList);
+        Collections.shuffle(numbers);
 
         for (int i = 0; i < 25; i++) {
-            buttons[i].setText(numberList.get(i));
-            buttons[i].setVisibility(View.VISIBLE);
+            buttons[i].setText(numbers.get(i).toString());
+            buttons[i].setOnClickListener(this);
         }
     }
 
@@ -53,6 +51,7 @@ public class TileActivity extends AppCompatActivity implements View.OnClickListe
         int number = Integer.parseInt(button.getText().toString());
 
         if (number == 1) {
+            startTimer();
         }
 
         if (number == currentNumber) {
@@ -62,16 +61,39 @@ public class TileActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (ButtonCount == 0) {
             showSuccessDialog();
+            stopTimer();
         }
     }
 
     private void showSuccessDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        long seconds = elapsedTime / 1000;
 
         dialogBuilder
-                .setNegativeButton("알람 끄기", (dialog, which) -> finish())
+                .setNegativeButton("끝내기", (dialog, which) -> finish())
                 .setCancelable(false)
                 .create()
                 .show();
+    }
+
+    private void startTimer() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stopTimer() {
+        // Implement if needed
+    }
+
+    private void resetGame() {
+        currentNumber = 1;
+        ButtonCount = 25;
+
+        Collections.shuffle(numbers);
+
+        for (int i = 0; i < 25; i++) {
+            buttons[i].setText(numbers.get(i).toString());
+            buttons[i].setVisibility(View.VISIBLE);
+        }
     }
 }

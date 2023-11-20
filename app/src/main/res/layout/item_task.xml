@@ -1,0 +1,38 @@
+<!-- item_goal.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="45dp"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal"
+    android:padding="7dp">
+
+
+    <ToggleButton
+        android:id="@+id/checkbox"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/task_toggle"
+        android:textOff=""
+        android:textOn=""
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/task"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:text="goalName"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="16sp"
+        android:autoSizeStepGranularity="1sp"/>
+
+
+</LinearLayout>
