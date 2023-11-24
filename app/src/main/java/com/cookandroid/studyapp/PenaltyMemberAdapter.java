@@ -20,12 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PenaltyMemberAdapter extends RecyclerView.Adapter<PenaltyMemberAdapter.ViewHolder> {
-    private List<String> memberList;
+    private List<MemberWithPenalty> memberList;
     private List<ViewHolder> holders = new ArrayList<>(); // ViewHolder 객체를 저장할 리스트
 
 
-    public PenaltyMemberAdapter(List<String> memberList) {
+    public PenaltyMemberAdapter(List<MemberWithPenalty> memberList) {
         this.memberList = memberList;
+    }
+
+    // 새로운 데이터로 어댑터를 업데이트하는 메서드
+    public void updateData(List<MemberWithPenalty> newMemberList) {
+        memberList.clear();
+        memberList.addAll(newMemberList);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -39,9 +46,10 @@ public class PenaltyMemberAdapter extends RecyclerView.Adapter<PenaltyMemberAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String member = memberList.get(position);
-        holder.memberName.setText(member);
-        holder.initial.setText(member.substring(0, 2));
+        MemberWithPenalty member = memberList.get(position);
+        holder.memberName.setText(member.getMemberName());
+        holder.initial.setText(member.getMemberName().substring(0, 2));
+        holder.penalty.setText(String.valueOf(member.getPenaltyAmount()));
     }
 
     @Override
@@ -54,13 +62,14 @@ public class PenaltyMemberAdapter extends RecyclerView.Adapter<PenaltyMemberAdap
         TextView memberName;
 
         TextView initial;
+        TextView penalty;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             memberName = itemView.findViewById(R.id.memberFullname);
             initial = itemView.findViewById(R.id.memberInitials);
-
+            penalty = itemView.findViewById(R.id.fineAmount);
         }
     }
 

@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -25,8 +26,8 @@ public class AlarmPlusActivity extends AppCompatActivity {
     private TimePicker timePicker;
     private Spinner missionSpinner, repeatSpinner;
     private CheckBox checkboxMonday, checkboxTuesday, checkboxWednesday, checkboxThursday, checkboxFriday, checkboxSaturday, checkboxSunday;
-    private int hour;
-    private int minute;
+
+    private Button testButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,8 @@ public class AlarmPlusActivity extends AppCompatActivity {
 
                 // 선택된 반복 주기 처리
                 String selectedRepeat = repeatSpinner.getSelectedItem().toString();
+                //selectedMission = missionSpinner.getSelectedItem().toString();
+
 
                 // 결과 메시지 생성
                 String resultMessage = "설정된 시간: " + hourOfDay + "시" + minuteOfDay + "분" + "\n" +
@@ -90,18 +93,23 @@ public class AlarmPlusActivity extends AppCompatActivity {
                 Toast.makeText(AlarmPlusActivity.this, resultMessage, Toast.LENGTH_LONG).show();
 
                 // 알람 설정 메서드 호출
-                setAlarm(hourOfDay, minuteOfDay);
+                setAlarm(hourOfDay, minuteOfDay,selectedMission);
+
                 // 알람 시간을 AlarmActivity로 전달
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("ALARM_HOUR", hourOfDay);
                 resultIntent.putExtra("ALARM_MINUTE", minuteOfDay);
+                resultIntent.putExtra("SELECTED_MISSION", selectedMission);
+
+
+
                 setResult(RESULT_OK, resultIntent);
                 finish(); // 현재 액티비티 종료
             }
         });
 
         // 테스트 버튼 클릭 이벤트 처리
-        Button testButton = findViewById(R.id.TestButton);
+        testButton = findViewById(R.id.TestButton);
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,7 +130,11 @@ public class AlarmPlusActivity extends AppCompatActivity {
                 popupDialog.setContentView(R.layout.popup_layout);
 
                 // 팝업 내용 초기화
-                // ... (팝업 내용 초기화 부분)
+                TextView popupTextView = popupDialog.findViewById(R.id.popupTextView);
+                popupTextView.setText("타일 맞추기 : 1~25의 타일을 순서에 맞게 터치해서 없애요!" + "\n"
+                        +"숫자 계산 : 주어진 숫자들의 사칙 연산을 알맞게 하세요!" + "\n"
+                        + "명언 쓰기 : 주어진 명언들을 종이에 적어 사진을 찍어서 인증하세요!");
+
 
                 // 팝업 닫기 버튼 처리
                 Button closePopupButton = popupDialog.findViewById(R.id.closePopupButton);
@@ -139,27 +151,30 @@ public class AlarmPlusActivity extends AppCompatActivity {
         });
     }
 
-    private void setAlarm(int hour, int minute) {
+    private void setAlarm(int hour, int minute, String mission) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
 
         // 소리 변경을 위한 Uri
-        //Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarmsound); // raw 폴더에 사용자 정의 소리 파일이 있어야 합니다.
+        Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarmsound);
 
         // 소리 설정
-        //alarmIntent.putExtra("android.media.extra.NOTIFICATION", soundUri);
+        alarmIntent.putExtra("android.media.extra.NOTIFICATION", soundUri);
         alarmIntent.putExtra("android.media.extra.STREAM_TYPE", AudioManager.STREAM_ALARM);
 
         // 알람 시간 설정
-        alarmIntent.putExtra("ALARM_HOUR", hour);
-        alarmIntent.putExtra("ALARM_MINUTE", minute);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_MUTABLE);
-
-        // 시간 설정
         Calendar alarmTime = Calendar.getInstance();
         alarmTime.set(Calendar.HOUR_OF_DAY, hour);
         alarmTime.set(Calendar.MINUTE, minute);
+        alarmTime.set(Calendar.SECOND, 0);
+
+        // 알람 시간 및 미션 설정
+        alarmIntent.putExtra("ALARM_HOUR", hour);
+        alarmIntent.putExtra("ALARM_MINUTE", minute);
+        alarmIntent.putExtra("SECOND", 0);
+        alarmIntent.putExtra("MISSION", mission);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         // 알람 설정
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
@@ -170,7 +185,21 @@ public class AlarmPlusActivity extends AppCompatActivity {
         serviceIntent.putExtra("android.media.extra.NOTIFICATION", Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarmsound));
         serviceIntent.putExtra("ALARM_HOUR", hour);
         serviceIntent.putExtra("ALARM_MINUTE", minute);
+        serviceIntent.putExtra("MISSION", mission);
         startService(serviceIntent);
+    }
+    public void stopAlarm() {
+        // 알람을 취소하기 위한 Intent 생성
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        // AlarmManager를 이용하여 알람 취소
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+
+        // 백그라운드에서 울리는 서비스 종료
+        Intent serviceIntent = new Intent(this, AlarmService.class);
+        stopService(serviceIntent);
     }
 
 }

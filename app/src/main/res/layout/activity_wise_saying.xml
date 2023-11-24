@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WiseSayingActivity">
-
-    <ImageView
-        android:id="@+id/photoImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="@string/photo_description" />
+    tools:context=".WiseSayingActivity"
+    >
 
     <TextView
         android:id="@+id/sayingTextView"
@@ -19,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text=""
-        android:textSize="18sp"
+        android:textSize="28sp"
         android:textStyle="bold" />
     <Button
         android:id="@+id/showSayingButton"
@@ -27,16 +21,58 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/sayingTextView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="18dp"
         android:text="명언 고르기" />
 
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/scrollView"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="21sp"
+                android:text="명언 인증" />
+
+            <TextView
+                android:id="@+id/tv_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/scrollView"
+                android:gravity="center"
+                android:text="@string/FirstMessage"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp" />
+        </LinearLayout>
+    </ScrollView>
+
     <Button
-        android:id="@+id/captureButton"
+        android:id="@+id/btn_OCR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="카메라" />
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="사진찍기" />
 
 </RelativeLayout>

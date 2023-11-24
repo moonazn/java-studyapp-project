@@ -1,11 +1,16 @@
 package com.cookandroid.studyapp;
 
+import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Random;
 
@@ -16,6 +21,8 @@ public class NumCalcActivity extends AppCompatActivity {
 
     private Random random = new Random();
 
+    private MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +31,9 @@ public class NumCalcActivity extends AppCompatActivity {
         questionTextView = findViewById(R.id.questionTextView);
         resultEditText = findViewById(R.id.resultEditText);
         answerButton = findViewById(R.id.answerButton);
+
+        // MediaPlayer 초기화
+        mediaPlayer = MediaPlayer.create(this, R.raw.alarmsound);
 
         generateRandomQuestion();
 
@@ -34,6 +44,7 @@ public class NumCalcActivity extends AppCompatActivity {
                 checkAnswer(answer);
             }
         });
+
     }
 
     private void generateRandomQuestion() {
@@ -89,10 +100,29 @@ public class NumCalcActivity extends AppCompatActivity {
 
         if (userAnswer.equals(String.valueOf(correctAnswer)) && correctAnswer >= 0) {
             Toast.makeText(NumCalcActivity.this, "정답입니다!", Toast.LENGTH_SHORT).show();
+            // 정답일 때 소리 중지
+            showSuccessDialog();
         } else {
             Toast.makeText(NumCalcActivity.this, "틀렸습니다. 다시 시도하세요.", Toast.LENGTH_SHORT).show();
         }
 
+        // 정답 여부와 관계없이 문제를 다시 생성
         generateRandomQuestion();
     }
+
+    private void showSuccessDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        dialogBuilder
+                .setNegativeButton("끝내기", (dialog, which) -> {
+                    // 알람 소리 정지
+                    AlarmReceiver.stopAlarmSound();
+                    // 액티비티 종료
+                    finish();
+                })
+                .setCancelable(false)
+                .create()
+                .show();
+    }
+
 }

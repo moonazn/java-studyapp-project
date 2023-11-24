@@ -84,10 +84,10 @@
         android:layout_height="wrap_content"
         android:text="완료"
         android:textColor="#2E64FE"
-        app:layout_constraintLeft_toLeftOf="@id/memberListText"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="320dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="178dp"
+        android:layout_marginRight="40dp"
         android:visibility="gone"/>
 
     <android.widget.FrameLayout

@@ -24,6 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class GroupNamePopup extends Dialog {
     private EditText editGroupName;
+
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
     private ImageView random;
     private TextView message;
     private Button btnCreateGroup;
@@ -85,22 +88,26 @@ public class GroupNamePopup extends Dialog {
                                 // 새로운 그룹을 위한 고유한 키 생성
 
                                 // 그룹 이름 저장
-                                groupsRef.child(groupKey).child("groupName").setValue(groupName);
+                                DatabaseReference groupsInRef = groupsRef.child(groupKey);
+                                groupsInRef.child("groupName").setValue(groupName);
 
                                 // Firebase Authentication으로 현재 로그인한 사용자의 UID 가져오기
                                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                                 String userId = currentUser.getUid(); // 현재 로그인한 사용자의 UID
+                                Log.d("userId =", userId);
+
 
                                 // 업로드 데이터에 있는 유저 UID를 사용하여 유저 닉네임을 가져옵니다.
                                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-                                usersRef.child(userId).child("nickname").addListenerForSingleValueEvent(new ValueEventListener() {
+                                usersRef.child("-" + userId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.exists()) {
-                                            String userNickname = dataSnapshot.getValue(String.class);
+                                    public void onDataChange(@NonNull DataSnapshot nameSnapshot) {
+                                        if (nameSnapshot.exists()) {
+                                            String userNickname = nameSnapshot.child("nickname").getValue(String.class);
 
+                                            Log.d("userNickname", userNickname);
                                             // 그룹에 현재 로그인한 사용자 추가
-                                            groupsRef.child(groupKey).child("members").child(userNickname).setValue(true);
+                                            groupsInRef.child("members").child(userNickname).setValue(true);
 
                                             DatabaseReference defaultGroupRef = FirebaseDatabase.getInstance().getReference("Group")
                                                     .child("-Ngn8da9xL4ZCKhgqwdq").child("members");
@@ -111,14 +118,15 @@ public class GroupNamePopup extends Dialog {
                                                         if (task.isSuccessful()) {
                                                             // 멤버 제거가 성공한 경우
                                                             Log.d("test", "noGroup 멤버 제거 성공");
+
+                                                            // 그룹 생성 후, 팝업을 닫을 수 있습니다.
+                                                            dismiss();
                                                         } else {
                                                             // 멤버 제거 중 오류가 발생한 경우
                                                             Log.d("test", "noGroup 멤버 제거 실패");
+                                                            // 오류에 대한 처리를 추가할 수 있습니다.
                                                         }
                                                     });
-
-                                            // 그룹 생성 후, 팝업을 닫을 수 있습니다.
-                                            dismiss();
                                         }
                                     }
 
@@ -131,6 +139,7 @@ public class GroupNamePopup extends Dialog {
                                         }
                                     }
                                 });
+
                             }
                         }
 
@@ -140,6 +149,7 @@ public class GroupNamePopup extends Dialog {
                         }
                     });
                 }
+                dismiss();
             }
         });
 

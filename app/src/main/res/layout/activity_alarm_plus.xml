@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="알람 설정"
+        android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold"
         android:gravity="center"
@@ -58,6 +59,7 @@
         android:layout_height="wrap_content"
         android:text="미션"
         android:textSize="16sp"
+        android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/showPopupButton"
@@ -66,8 +68,10 @@
 
     <Spinner
         android:id="@+id/missionSpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:background="@drawable/round_rectangle_spinner"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,11 +85,12 @@
         android:layout_height="wrap_content"
         android:text="요일 별 반복"
         android:textSize="16sp"
+        android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/missionSpinner"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="3dp" />
+        android:layout_marginTop="30dp" />
 
     <LinearLayout
         android:id="@+id/dayOfWeekLayout"
@@ -161,12 +166,14 @@
 
     <Spinner
         android:id="@+id/repeatSpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dayOfWeekLayout2"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="170dp"
+        android:textAlignment="center"
+        android:background="@drawable/round_rectangle_spinner"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/missionSpinner"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <Button

@@ -1,4 +1,6 @@
 package com.cookandroid.studyapp;
+
+
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -35,10 +37,12 @@ public class AlarmService extends Service {
 
         Log.d("AlarmService", "Current time: " + currentHour + ":" + currentMinute);
 
-        // 알람 시간과 현재 시간이 일치하면 소리를 울림
-        if (currentHour == alarmHour && currentMinute == alarmMinute) {
-            Log.d("AlarmService", "Playing alarm sound");
-            playAlarmSound();
+        if ((currentHour <= alarmHour && currentMinute < alarmMinute)) {
+            // 알람 시간과 현재 시간이 일치하면 소리를 울림
+            if (currentHour == alarmHour && currentMinute == alarmMinute) {
+                Log.d("AlarmService", "Playing alarm sound");
+                playAlarmSound();
+            }
         }
 
         return START_NOT_STICKY;
@@ -47,8 +51,14 @@ public class AlarmService extends Service {
     @Override
     public void onDestroy() {
         if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
+            try {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+                mediaPlayer.release();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
         super.onDestroy();
     }
@@ -66,6 +76,8 @@ public class AlarmService extends Service {
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
                 mediaPlayer.prepare();
                 mediaPlayer.start();
+
+
             } catch (IOException e) {
                 Log.e("AlarmService", "Error playing alarm sound: " + e.getMessage());
             }

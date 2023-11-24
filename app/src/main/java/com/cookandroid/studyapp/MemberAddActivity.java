@@ -96,11 +96,11 @@ public class MemberAddActivity extends AppCompatActivity {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         // 사용자의 UID를 기반으로 해당 사용자의 닉네임 가져오기
-        usersRef.child(currentUserUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        usersRef.child("-"+currentUserUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    final String currentUserNickname = dataSnapshot.getValue(String.class);
+                    final String currentUserNickname = dataSnapshot.child("nickname").getValue(String.class);
 
                     // 현재 로그인한 유저(A)가 속한 스터디 그룹이 어디인지 찾기
                     getGroupKeyForUser(currentUserUid, currentUserNickname, newMember);

@@ -116,14 +116,17 @@
                 android:layout_height="wrap_content"
                 android:text="오늘 총 공부시간: "
                 android:textSize="13dp"
+                android:layout_marginLeft="4dp"
                 android:textColor="@color/black"
                 tools:ignore="TextSizeCheck" />
 
             <TextView
+                android:id="@+id/totalTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5h 53m"
+                android:text="0h 0m"
                 android:textSize="23dp"
+                android:layout_marginLeft="4dp"
                 android:textStyle="bold"
                 android:textColor="#5858FA"/>
 

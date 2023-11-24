@@ -1,6 +1,7 @@
 package com.cookandroid.studyapp;
 
 import static com.cookandroid.studyapp.HomeActivity.selectedDate;
+import static com.cookandroid.studyapp.MyPageActivity.groupKey;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,7 +58,6 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
 
     private Spinner taskTitleSpinner;
     private ArrayAdapter<String> taskTitleAdapter;
-
     private TextView currentTaskName;
     private TextView currentTaskTime;
 
@@ -83,7 +84,10 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
         currentTaskTime = findViewById(R.id.currentTaskTime);
         todayTime = findViewById(R.id.todayTime);
 
-
+        if (stopwatchTextView.getText() != "00:00:00") {
+            stopwatchTextView.setText("00:00:00");
+            Log.d("처음세팅", "stopwatchTextView 00");
+        }
 
         // 오늘 날짜로 초기화
         Calendar today = Calendar.getInstance();
@@ -97,8 +101,11 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
 
         // 시간 초기화
         int initialTime = sharedPreferences.getInt("stopwatchTime", 0);
+        initialTime = 0;
         seconds = initialTime;
-        updateStopwatchText();
+        Log.d("시간 초기화", String.valueOf(initialTime));
+
+        updateTodayTime();
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,8 +156,6 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
             @Override
             public void onClick(View v) {
 
-
-
                 saveElapsedTimeToDatabase();
 
                 // Finish 버튼 클릭 시 홈으로 이동
@@ -189,7 +194,6 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
                             Log.d("FirebaseData", "Task Name: " + taskName);
                         }
                     }
-
                     // 어댑터 변경을 알림
                     taskTitleAdapter.notifyDataSetChanged();
                 }
@@ -219,9 +223,6 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
                 String selectedTask = taskTitleSpinner.getSelectedItem().toString();
                 currentTaskName.setText(selectedTask);
 
-//                // 기존에 저장된 시간 가져오기
-//                DatabaseReference taskReference = getTaskReference(selectedTask);
-
                 // Firebase Realtime Database에 데이터 저장
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child("-" + uid);
                 DatabaseReference userTaskReference = databaseReference.child("date").child(selectedDate);
@@ -238,17 +239,11 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
                                 if (durationAsString != null) {
                                     currentTaskTotalDuration = parseDurationInSeconds(durationAsString);
                                     Log.d("FirebaseData", "Current Task Total Duration: " + currentTaskTotalDuration);
-                                    updateCurrentTaskTime(); // 현재 측정 중인 시간으로 업데이트
+                                    //updateCurrentTaskTime(); // 현재 측정 중인 시간으로 업데이트
+                                    currentTaskTime.setText(formatDuration(currentTaskTotalDuration));
                                 }
                             }
-//                            Log.d("FirebaseData", "dataSnapshot.exists - 할일 선택 완료");
-//                            String durationAsString = dataSnapshot.child("duration").getValue(String.class);
-//                            Log.d("data", "durationAsString : " + durationAsString);
-//                            if (durationAsString != null) {
-//                                currentTaskTotalDuration = parseDurationInSeconds(durationAsString);
-//                                Log.d("FirebaseData", "Current Task Total Duration: " + currentTaskTotalDuration);
-//                                updateCurrentTaskTime(); // 현재 측정 중인 시간으로 업데이트
-//                            }
+
                         }
                     }
 
@@ -269,11 +264,50 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
     }
 
 
+    private void updateTodayTime() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child("-" + uid);
+        DatabaseReference dateReference = databaseReference.child("totalTime").child(selectedDate);
 
+        dateReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String totalDuration = dataSnapshot.child("totalDuration").getValue(String.class);
+                    if (totalDuration != null) {
+                        todayTime.setText(formatDurationString(totalDuration));
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("FirebaseError", "Firebase 데이터베이스에서 데이터를 가져오는 중 오류 발생: " + databaseError.getMessage());
+            }
+        });
+    }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // 센서 정확도 변경 이벤트 처리
+    }
+
+    // 문자열 형태의 시간을 변환하는 메서드
+    private String formatDurationString(String duration) {
+        // "h", "m", "s"를 제거하고 각 시간 단위를 추출
+        String[] timeUnits = duration.split("\\s+");
+        int hours = 0, minutes = 0, seconds = 0;
+
+        for (String unit : timeUnits) {
+            if (unit.endsWith("h")) {
+                hours = Integer.parseInt(unit.replace("h", ""));
+            } else if (unit.endsWith("m")) {
+                minutes = Integer.parseInt(unit.replace("m", ""));
+            } else if (unit.endsWith("s")) {
+                seconds = Integer.parseInt(unit.replace("s", ""));
+            }
+        }
+
+        // 시, 분, 초를 시간 형식에 맞게 변환
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     @Override
@@ -308,6 +342,24 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
 
                 String time = String.format("%02d:%02d:%02d", hours, minutes, secs);
                 stopwatchTextView.setText(time);
+                Log.d("347", "stopwatchTextView setted");
+
+                // todayTime 업데이트
+                int secondTodayTime = parseStopwatchTextView(todayTime);
+                Log.d("이거", String.valueOf(secondTodayTime));
+                Log.d("이거", todayTime.getText().toString());
+
+                secondTodayTime++;
+                // 시간을 시, 분, 초로 분할
+                int hours2 = secondTodayTime / 3600;
+                int minutes2 = (secondTodayTime % 3600) / 60;
+                int seconds2 = secondTodayTime % 60;
+
+                // "0h 0m 0s" 형태로 포맷팅
+                String formattedDuration = String.format("%02d:%02d:%02d", hours2, minutes2, seconds2);
+                todayTime.setText(formattedDuration);
+                Log.d("이거", formattedDuration);
+
 
                 // 현재 시간을 SharedPreferences에 저장
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -325,8 +377,7 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
         // 현재 선택된 할 일의 이름 가져오기
         String selectedTask = taskTitleSpinner.getSelectedItem().toString();
         currentTaskName.setText(selectedTask);
-
-        updateCurrentTaskTime(); // 현재 측정 중인 시간으로 업데이트
+//        updateCurrentTaskTime(); // 현재 측정 중인 시간으로 업데이트
 
         Handler handler = handlerReference.get();
         if (handler == null) {
@@ -360,8 +411,9 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    int totalDuration = currentTaskTotalDuration + parseStopwatchTextView();
+                    int totalDuration = currentTaskTotalDuration + parseStopwatchTextView(stopwatchTextView);
                     currentTaskTime.setText(formatDuration(totalDuration));
+
                 }
             });
         }
@@ -380,6 +432,7 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
         finishButton.setEnabled(true);
+        //updateTodayTime(); // 업데이트 추가
     }
 
     private void resetStopwatch() {
@@ -402,6 +455,8 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
         int secs = seconds % 60;
         String time = String.format("%02d:%02d:%02d", hours, minutes, secs);
         stopwatchTextView.setText(time);
+        Log.d("461", "stopwatchTextView setted");
+
     }
 
     @Override
@@ -436,8 +491,7 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void saveElapsedTimeToDatabase() {
-
-        if (taskTitleSpinner.getSelectedItem() != null){
+        if (taskTitleSpinner.getSelectedItem() != null) {
             // Spinner에서 선택된 할 일 가져오기
             String selectedTask = taskTitleSpinner.getSelectedItem().toString();
 
@@ -454,6 +508,31 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
                         for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
                             String taskId = taskSnapshot.getKey();
                             updateTaskDuration(userTaskReference.child(taskId));
+
+                            // 총 학습 시간 업데이트
+                            updateTotalStudyTime(databaseReference.child("totalTime").child(selectedDate), userTaskReference);
+                            updateTotalStudyTimeForGroup(groupKey, selectedDate, databaseReference);
+
+//                            // 사용자의 그룹 ID를 데이터베이스에서 가져오기
+//                            DatabaseReference userGroupReference = databaseReference.child("Group");
+//                            userGroupReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot groupSnapshot) {
+//                                    if (groupSnapshot.exists()) {
+//                                        String groupId = groupSnapshot.getValue(String.class);
+//                                        // 사용자가 그룹에 속해 있으면
+//                                        if (groupId != null && !groupId.isEmpty()) {
+//                                            // 해당 그룹의 총 공부 시간 업데이트
+//                                            updateTotalStudyTimeForGroup(groupKey, selectedDate, databaseReference);
+//                                        }
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {
+//                                    Log.e("FirebaseError", "사용자의 그룹 ID를 가져오는 중 오류 발생: " + databaseError.getMessage());
+//                                }
+//                            });
                         }
                     }
                 }
@@ -468,6 +547,139 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
         }
     }
 
+    private void updateTotalStudyTimeForGroup(String groupId, String date, DatabaseReference databaseReference) {
+        DatabaseReference groupReference = FirebaseDatabase.getInstance().getReference("Group").child(groupId);
+        DatabaseReference groupTotalTimeReference = groupReference.child("totalTime").child(date);
+
+        groupTotalTimeReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot groupSnapshot) {
+                int totalDuration = 0;
+
+                // 현재 측정 중인 시간을 초로 변환
+                int currentDuration = parseStopwatchTextView(stopwatchTextView);
+
+                // 해당 날짜에 대한 그룹 노드가 있는지 확인
+                if (groupSnapshot.exists()) {
+                    Log.d("groupSnapshot.exists", "true");
+
+                    totalDuration = parseDurationInSeconds(groupSnapshot.child("totalDuration").getValue(String.class));
+
+                    // 두 시간을 더하여 totalDuration 계산
+                    totalDuration += currentDuration;
+
+//                    // 사용자 데이터에서 작업 지속 시간 가져오기
+//                    DatabaseReference userTotalTimeReference = databaseReference.child("totalTime").child(date);
+//                    userTotalTimeReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            String userTaskDuration = snapshot.child("totalDuration").getValue(String.class);
+//                            Log.d("userTaskDuration", userTaskDuration);
+//                            if (userTaskDuration != null) {
+//
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+
+                } else {
+
+                    // 두 시간을 더하여 totalDuration 계산
+                    totalDuration += currentDuration;
+
+                    // 시간을 시, 분, 초로 분할
+                    int hours = totalDuration / 3600;
+                    int minutes = (totalDuration % 3600) / 60;
+                    int seconds = totalDuration % 60;
+
+                    // "0h 0m 0s" 형태로 포맷팅
+                    String formattedDuration = String.format("%dh %dm %ds", hours, minutes, seconds);
+                    // 그룹 노드가 없는 경우, 새로운 구조 생성
+                    groupReference.child("totalTime").child(date).child("totalDuration").setValue(formattedDuration);
+                }
+                // 시간을 시, 분, 초로 분할
+                int hours = totalDuration / 3600;
+                int minutes = (totalDuration % 3600) / 60;
+                int seconds = totalDuration % 60;
+
+                // "0h 0m 0s" 형태로 포맷팅
+                String formattedDuration = String.format("%dh %dm %ds", hours, minutes, seconds);
+                // 그룹의 총 공부 시간 업데이트 또는 생성
+                groupTotalTimeReference.child("totalDuration").setValue(formattedDuration);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("FirebaseError", "그룹의 총 공부 시간을 업데이트하는 중 오류 발생: " + databaseError.getMessage());
+            }
+        });
+    }
+
+
+    private void updateTotalStudyTime(DatabaseReference dateReference, DatabaseReference timeReference) {
+        final int[] totalDuration = {0};
+        timeReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                // 오늘 날짜 노드가 존재하는 경우
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
+                        // 각 할일들의 duration 값을 가져와서 합산
+                        String durationAsString = taskSnapshot.child("duration").getValue(String.class);
+                        if (durationAsString != null) {
+                            // 기존 총 학습 시간을 초로 변환
+                            totalDuration[0] += parseDurationInSeconds(durationAsString);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        dateReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // totalTime 노드가 존재하지 않는 경우
+                if (!dataSnapshot.exists()) {
+                    dateReference.child("totalDuration").setValue("0h 0m 0s");
+                }
+
+                // 현재 측정 중인 시간을 초로 변환
+                int currentDuration = parseStopwatchTextView(stopwatchTextView);
+
+                // 두 시간을 더하여 totalDuration 계산
+                totalDuration[0] += currentDuration;
+
+                // 시간을 시, 분, 초로 분할
+                int hours = totalDuration[0] / 3600;
+                int minutes = (totalDuration[0] % 3600) / 60;
+                int seconds = totalDuration[0] % 60;
+
+                // "0h 0m 0s" 형태로 포맷팅
+                String formattedDuration = String.format("%dh %dm %ds", hours, minutes, seconds);
+
+                // Firebase 데이터베이스에 저장
+                dateReference.child("totalDuration").setValue(formattedDuration);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("FirebaseError", "Firebase 데이터베이스에서 데이터를 가져오는 중 오류 발생: " + databaseError.getMessage());
+            }
+        });
+    }
+
+
     private void updateTaskDuration(DatabaseReference taskReference) {
         taskReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -480,7 +692,7 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
                         if (durationAsString != null) {
 
                             // stopwatchTextView에 표시된 시간을 파싱하여 시, 분, 초로 분할
-                            int currentDuration = parseStopwatchTextView();
+                            int currentDuration = parseStopwatchTextView(stopwatchTextView);
 
                             // 기존 지속 시간을 초로 변환
                             int existingDuration = parseDurationInSeconds(durationAsString);
@@ -507,8 +719,8 @@ public class StopwatchActivity extends AppCompatActivity implements SensorEventL
         });
     }
     // stopwatchTextView에 표시된 시간을 초로 변환하는 메서드
-    private int parseStopwatchTextView() {
-        String timeString = stopwatchTextView.getText().toString();
+    private int parseStopwatchTextView(TextView textView) {
+        String timeString = textView.getText().toString();
         String[] timeUnits = timeString.split(":");
         int hours = Integer.parseInt(timeUnits[0]);
         int minutes = Integer.parseInt(timeUnits[1]);

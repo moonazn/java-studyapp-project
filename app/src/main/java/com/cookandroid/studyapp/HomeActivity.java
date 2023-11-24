@@ -68,6 +68,8 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
 
         LinearLayout mycircle = findViewById(R.id.mycircle);
 
+        TextView totalTimeTextView = findViewById(R.id.totalTimeTextView);
+
         calendarViewMonthly.setFocusedMonthDateColor(Color.parseColor("#5858FA"));
 
         mycircle.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +102,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
 
                     // 스터디 멤버 리스트 업데이트
                     getGroupMemForUser(nickname);
+
                 } else {
                     // 사용자의 UID에 해당하는 데이터가 없을 때 처리
                     Log.d("test", "DataSnapshot does not exist for UID: " + uid);
@@ -120,9 +123,66 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
                 Intent intent = new Intent(HomeActivity.this, PenaltyCalcActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                overridePendingTransition(0, R.anim.horizon_enter);
+                finish();
             }
         });
 
+        usersRef.child("totalTime").child(selectedDate).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // selectedDate 노드가 존재하는지 확인
+
+                    // 'totalDuration' 값을 가져오기
+                    String totalTime = snapshot.child("totalDuration").getValue(String.class);
+
+                    if (totalTime != null) {
+                        // 'm'을 기준으로 분리
+                        String[] parts = totalTime.split("m");
+
+                        String[] frontParts = parts[0].split(" ");
+
+                        String frontPart = frontParts[0];
+
+                        String middlePart = frontParts[1];
+
+                        // 뒷 부분에서 's'를 기준으로 분리
+                        String[] thirdParts = parts[1].split("s");
+
+                        // 뒷 부분 중 숫자 부분
+                        String numberPart = thirdParts[0].trim();
+
+                        // 뒷 부분의 숫자가 0보다 크면
+                        if (Integer.parseInt(numberPart) > 0) {
+                            // 중간 부분 중 숫자 부분을 숫자로 변환하여 1을 늘림
+                            int minutes = Integer.parseInt(middlePart.trim());
+                            if (minutes < 59) {
+                                minutes++; // 1을 늘림
+                                middlePart = String.valueOf(minutes);
+                            }
+                        }
+
+                        // 최종적으로 필요한 문자열 생성
+                        String finalResult = frontPart + " " + middlePart + "m";
+
+                        totalTimeTextView.setText(finalResult);
+                    } else {
+                        // totalTime이 null인 경우에 대한 처리
+                        totalTimeTextView.setText("totalTime is null");
+                    }
+                } else {
+                    // selectedDate 노드가 존재하지 않는 경우에 대한 처리
+                    totalTimeTextView.setText("0h 0m");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // onCancelled 메서드 내부에 오류 처리 로직 추가
+                Log.e("FirebaseError", "Failed to read value.", error.toException());
+            }
+        });
 
         calendarViewMonthly.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -139,6 +199,62 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
                 // 로그 추가: 선택된 날짜와 리스트 크기 확인
                 Log.d("HomeActivity", "Selected Date: " + selectedDate);
                 Log.d("HomeActivity", "TaskItemList Size: " + taskItemList.size());
+
+                usersRef.child("totalTime").child(selectedDate).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // selectedDate 노드가 존재하는지 확인
+
+                            // 'totalDuration' 값을 가져오기
+                            String totalTime = snapshot.child("totalDuration").getValue(String.class);
+
+                            if (totalTime != null) {
+                                // 'm'을 기준으로 분리
+                                String[] parts = totalTime.split("m");
+
+                                String[] frontParts = parts[0].split(" ");
+
+                                String frontPart = frontParts[0];
+
+                                String middlePart = frontParts[1];
+
+                                // 뒷 부분에서 's'를 기준으로 분리
+                                String[] thirdParts = parts[1].split("s");
+
+                                // 뒷 부분 중 숫자 부분
+                                String numberPart = thirdParts[0].trim();
+
+                                // 뒷 부분의 숫자가 0보다 크면
+                                if (Integer.parseInt(numberPart) > 0) {
+                                    // 중간 부분 중 숫자 부분을 숫자로 변환하여 1을 늘림
+                                    int minutes = Integer.parseInt(middlePart.trim());
+                                    if (minutes < 59) {
+                                        minutes++; // 1을 늘림
+                                        middlePart = String.valueOf(minutes);
+                                    }
+                                }
+
+                                // 최종적으로 필요한 문자열 생성
+                                String finalResult = frontPart + " " + middlePart + "m";
+
+                                totalTimeTextView.setText(finalResult);
+                            } else {
+                                // totalTime이 null인 경우에 대한 처리
+                                totalTimeTextView.setText("totalTime is null");
+                            }
+                        } else {
+                            // selectedDate 노드가 존재하지 않는 경우에 대한 처리
+                            totalTimeTextView.setText("0h 0m");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // onCancelled 메서드 내부에 오류 처리 로직 추가
+                        Log.e("FirebaseError", "Failed to read value.", error.toException());
+                    }
+                });
 
                 plusAdditional1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -168,6 +284,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 overridePendingTransition(0, R.anim.horizon_enter);
+                finish();
             }
         });
 
@@ -229,6 +346,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
                 Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
             }
         });
 
@@ -238,6 +356,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
                 Intent intent = new Intent(HomeActivity.this, BoardActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
             }
         });
 
@@ -247,6 +366,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
                 Intent intent = new Intent(HomeActivity.this, AlarmActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
             }
         });
 
@@ -256,6 +376,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
                 Intent intent = new Intent(HomeActivity.this, MyPageActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
             }
         });
 
@@ -287,6 +408,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
         startActivity(intent);
         overridePendingTransition(0, 0);
         overridePendingTransition(0, R.anim.horizon_enter);
+        finish();
     }
 
     // 데이터 로딩을 완료한 후 RecyclerView를 초기화

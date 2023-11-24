@@ -71,7 +71,10 @@ public class TileActivity extends AppCompatActivity implements View.OnClickListe
         long seconds = elapsedTime / 1000;
 
         dialogBuilder
-                .setNegativeButton("끝내기", (dialog, which) -> finish())
+                .setNegativeButton("끝내기", (dialog, which) -> {
+                    AlarmReceiver.stopAlarmSound();
+                    finish(); // 액티비티 종료
+                })
                 .setCancelable(false)
                 .create()
                 .show();

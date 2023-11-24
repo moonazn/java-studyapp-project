@@ -7,6 +7,15 @@ android {
     namespace 'com.cookandroid.studyapp'
     compileSdkVersion 33
 
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets', 'src\\main\\assets']
+            aidl {
+                srcDirs 'src\\main\\aidl'
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "com.cookandroid.studyapp"
         minSdk 21
@@ -27,6 +36,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src/main/assets'
+            }
+        }
+    }
 }
 
 dependencies {
@@ -46,4 +62,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'com.rmtheis:tess-two:9.1.0'
+    implementation 'com.karumi:dexter:6.2.3'
+
 }
