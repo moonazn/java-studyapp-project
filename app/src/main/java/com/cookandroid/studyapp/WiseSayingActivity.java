@@ -398,6 +398,7 @@ public class WiseSayingActivity extends AppCompatActivity implements View.OnClic
                     // 인증 성공
                     Toast.makeText(mContext, "인증 성공!", Toast.LENGTH_SHORT).show();
                     AlarmReceiver.stopAlarmSound();
+                    finish();
                 } else {
                     // 인증 실패
                     Toast.makeText(mContext, "인증 실패!", Toast.LENGTH_SHORT).show();

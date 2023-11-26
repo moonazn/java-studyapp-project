@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AlarmActivity extends AppCompatActivity {
 
-    private List<AlarmInfo> alarmList = new ArrayList<>();
+    private static List<AlarmInfo> alarmList = new ArrayList<>();
     private AlarmAdapter alarmAdapter;
 
     @Override
@@ -117,8 +117,16 @@ public class AlarmActivity extends AppCompatActivity {
                 overridePendingTransition(0, 0);
             }
         });
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 액티비티가 다시 시작될 때 알람 목록을 업데이트하고 어댑터에 반영
+        alarmAdapter.updatedata(alarmList);
+        alarmAdapter.notifyDataSetChanged();
+    }
+
 
     // 알람 플러스 액티비티에서 결과를 받아올 때 호출되는 메서드
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -130,78 +138,34 @@ public class AlarmActivity extends AppCompatActivity {
             int hour = data.getIntExtra("ALARM_HOUR", 0);
             int minute = data.getIntExtra("ALARM_MINUTE", 0);
             String mission = data.getStringExtra("SELECTED_MISSION");
+            int uniqueId = data.getIntExtra("ID", 0);
 
-            int uniqueId = generateUniqueId();  // 고유 ID 생성 메서드를 호출하여 ID를 얻어옵니다.
             alarmList.add(new AlarmInfo(uniqueId, hour, minute, mission));
+            alarmAdapter.updatedata(alarmList);
             alarmAdapter.notifyDataSetChanged();
         }
     }
 
-    // Adapter 클래스 추가
-    public static class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
-
-        private List<AlarmInfo> alarmList;
-
-        public AlarmAdapter(List<AlarmInfo> alarmList) {
-            this.alarmList = alarmList;
-        }
-
-        public void updatedata(List<AlarmInfo> alarmList){
-            this.alarmList = alarmList;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.alarm_list_item, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-            AlarmInfo alarm = alarmList.get(position);
-            holder.alarmTextView.setText("알람 시간 : " + alarm.getHour() + "시 " + alarm.getMinute() + "분"+"\n" +"미션 : "+alarm.getMission());
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return alarmList.size();
-        }
-
-        public static class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView alarmTextView;
-            public Button deleteButton;
-
-            public ViewHolder(View view) {
-                super(view);
-                alarmTextView = view.findViewById(R.id.alarmTextView);
-                deleteButton = view.findViewById(R.id.deleteButton);
-            }
-        }
-    }
     private void cancelAlarm(int position) {
         AlarmInfo deletedAlarm = alarmList.get(position);
 
         // 액티비티에서 호출되었음을 나타내기 위해 true 전달
-        AlarmReceiver.cancelAlarm(this, deletedAlarm.getId(), true);
+        AlarmReceiver.cancelAlarm(this, deletedAlarm.getId(), false);
+        Log.d("AlarmActivity", "알람 삭제!: " + deletedAlarm.getId());
 
-        alarmList.remove(deletedAlarm);
+        alarmList.remove(position);
+
         alarmAdapter.updatedata(alarmList);
         alarmAdapter.notifyDataSetChanged();
 
-        Log.d("AlarmActivity", "알람 삭제!: " + deletedAlarm.getId());
     }
 
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private int generateUniqueId() {
+    public static int generateUniqueId() {
         AtomicInteger counter = new AtomicInteger(0);
         alarmList.forEach(alarmInfo -> counter.updateAndGet(v -> Math.max(v, alarmInfo.getId() + 1)));
         return counter.get();
+
     }
 
     public static class AlarmInfo {

@@ -294,7 +294,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
     private void calculatePenaltyForMember(String memberName, int certificationCondition, OnPenaltyCalculationCompleteListener listener) {
         switch (penaltyCondition){
             case "upload":
-                DatabaseReference uploadsRef = FirebaseDatabase.getInstance().getReference("Group").child(groupKey).child("uploads").getRef();
+                DatabaseReference uploadsRef = FirebaseDatabase.getInstance().getReference("Group").child(groupKey).child("uploads");
 
                 // 사용자 설정 벌금을 일주일 동안의 벌금에 누적할 변수
                 int[] weeklyPenaltySum = {0};
@@ -364,7 +364,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                         }
 
                         // weeklyPenaltySum을 memberList에 해당 사용자의 벌금 값으로 설정
-//                        setWeeklyPenaltySumForMember(memberName, weeklyPenaltySum[0]);
+                        setWeeklyPenaltySumForMember(memberName, weeklyPenaltySum[0]);
                         Log.d("WeeklyPenaltySum", String.valueOf(weeklyPenaltySum[0]));
                     }
 
@@ -375,6 +375,8 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                 });
 
                 listener.onPenaltyCalculationComplete(weeklyPenaltySum[0]);
+                Log.d("listener called ", "true");
+
                 break;
 
             case "study time":
@@ -399,25 +401,27 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                     }
                 });
 
-                for (int i = 7; i > 0; i--) {
-                    // 최근 일주일 동안의 시작 날짜를 구합니다.
-                    long oneWeekAgoTimestamp = getOneWeekAgoTimestamp(i);
+                DatabaseReference timeRef = usersRef.child(uid[0]).child("totalTime");
 
-                    // Timestamp를 Date로 변환
-                    Date oneWeekAgoDate = new Date(oneWeekAgoTimestamp);
+                timeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    // Date를 원하는 형식의 문자열로 변환
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    String formattedDate = dateFormat.format(oneWeekAgoDate);
-                    Log.d("WeeklyPenaltySum", "Start of inner loop for date: " + formattedDate);
+                        for (int i = 7; i > 0; i--) {
+                            // 최근 일주일 동안의 시작 날짜를 구합니다.
+                            long oneWeekAgoTimestamp = getOneWeekAgoTimestamp(i);
 
-                    DatabaseReference timeRef = usersRef.child(uid[0]).child("totalTime").child(formattedDate).child("totalDuration");
+                            // Timestamp를 Date로 변환
+                            Date oneWeekAgoDate = new Date(oneWeekAgoTimestamp);
 
-                    int finalI = i;
-                    timeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String totalDurationString = snapshot.getValue(String.class);
+                            // Date를 원하는 형식의 문자열로 변환
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            String formattedDate = dateFormat.format(oneWeekAgoDate);
+                            Log.d("WeeklyPenaltySum", "Start of inner loop for date: " + formattedDate);
+
+                            int finalI = i;
+
+                            String totalDurationString = snapshot.child(formattedDate).child("totalDuration").getValue(String.class);
                             Log.d("WeeklyPenaltySum", "Total duration string: " + totalDurationString);
                             int totalDuration;
 
@@ -428,7 +432,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                             }
 
                             // 해당 날짜의 공부 시간이 기준 시간 미만인 경우 벌금 누적
-                            if (totalDuration < (penaltyConditionValue * 60 * 60 * 1000)) {
+                            if (totalDuration < (penaltyConditionValue * 60 * 60)) {
                                 weeklyPenaltySum[0] += penaltyAmount;
                             }
 
@@ -437,18 +441,21 @@ public class PenaltyCalcActivity extends AppCompatActivity {
 
                                 Log.d("WeeklyPenaltySum", String.valueOf(weeklyPenaltySum[0]));
 
-//                                setWeeklyPenaltySumForMember(memberName, weeklyPenaltySum[0]);
+                                setWeeklyPenaltySumForMember(memberName, weeklyPenaltySum[0]);
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
 
                         }
-                    });
-                }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
                 listener.onPenaltyCalculationComplete(weeklyPenaltySum[0]);
-
+                Log.d("listener called ", "true");
                 break;
         }
 

@@ -1,5 +1,7 @@
 package com.cookandroid.studyapp;
 
+import static com.cookandroid.studyapp.AlarmActivity.generateUniqueId;
+
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -7,6 +9,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -173,8 +176,12 @@ public class AlarmPlusActivity extends AppCompatActivity {
         alarmIntent.putExtra("ALARM_MINUTE", minute);
         alarmIntent.putExtra("SECOND", 0);
         alarmIntent.putExtra("MISSION", mission);
+        int uniqueId = generateUniqueId();
+        Log.d("unique ID : ", String.valueOf(uniqueId));
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        alarmIntent.putExtra("ID", uniqueId);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, uniqueId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         // 알람 설정
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);

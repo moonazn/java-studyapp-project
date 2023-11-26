@@ -117,6 +117,7 @@ public class HomeActivity extends AppCompatActivity implements AddGoalDialog.Goa
 
         TextView penaltyCalc = findViewById(R.id.penaltyCalc);
 
+
         penaltyCalc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

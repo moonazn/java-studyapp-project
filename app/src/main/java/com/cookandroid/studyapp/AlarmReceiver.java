@@ -160,14 +160,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getBroadcast(
                     context,
-                    alarmId + 1000,
+                    alarmId,
                     alarmIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_MUTABLE
             );
         } else {
             pendingIntent = PendingIntent.getBroadcast(
                     context,
-                    alarmId + 1000,
+                    alarmId,
                     alarmIntent,
                     0
             );

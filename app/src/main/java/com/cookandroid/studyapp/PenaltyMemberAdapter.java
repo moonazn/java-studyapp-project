@@ -2,6 +2,7 @@ package com.cookandroid.studyapp;
 
 import static com.cookandroid.studyapp.MyPageActivity.groupKey;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class PenaltyMemberAdapter extends RecyclerView.Adapter<PenaltyMemberAdap
     }
 
     // 새로운 데이터로 어댑터를 업데이트하는 메서드
+    @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<MemberWithPenalty> newMemberList) {
         memberList.clear();
         memberList.addAll(newMemberList);
