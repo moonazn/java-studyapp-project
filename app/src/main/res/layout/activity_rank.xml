@@ -99,7 +99,7 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:text="group1"
+                    android:text="바쁜척하는 아이언맨"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -109,7 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="60h 24m 36s"
+                    android:text="1h 27m 03s"
                     android:textColor="#5858FA"/>
 
             </LinearLayout>
@@ -133,7 +133,7 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:text="group2"
+                    android:text="코딩하는 로맨티스트"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -143,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="60h 23m 36s"
+                    android:text="00h 01m 31s"
                     android:textColor="#5858FA"/>
 
             </LinearLayout>
@@ -165,7 +165,7 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:text="group3"
+                    android:text="noGroupPersonal"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -175,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="60h 22m 36s"
+                    android:text="00h 01m 08s"
                     android:textColor="#5858FA"/>
 
             </LinearLayout>
@@ -193,7 +193,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginTop="10dp"/>
-            
+
         </LinearLayout>
     </ScrollView>
 

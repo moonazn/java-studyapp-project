@@ -1,6 +1,7 @@
 package com.cookandroid.studyapp;
 
 import static com.cookandroid.studyapp.MyPageActivity.groupKey;
+import static com.cookandroid.studyapp.PenaltyCalcActivity.penaltyAmount;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -19,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PenaltyMemberAdapter extends RecyclerView.Adapter<PenaltyMemberAdapter.ViewHolder> {
     private List<MemberWithPenalty> memberList;
@@ -52,6 +54,14 @@ public class PenaltyMemberAdapter extends RecyclerView.Adapter<PenaltyMemberAdap
         holder.memberName.setText(member.getMemberName());
         holder.initial.setText(member.getMemberName().substring(0, 2));
         holder.penalty.setText(String.valueOf(member.getPenaltyAmount()));
+
+//        // Random 객체 생성
+//        Random random = new Random();
+//
+//        // 범위 내에서 랜덤 정수 생성
+//        int randomNumber = random.nextInt(4);
+//
+//        holder.penalty.setText(String.valueOf(member.getPenaltyAmount() - (penaltyAmount) * randomNumber));
     }
 
     @Override

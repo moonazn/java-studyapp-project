@@ -158,7 +158,6 @@ public class RankActivity extends AppCompatActivity {
         });
 
     }
-
     // 지난 7일 동안의 날짜 목록을 얻어오는 메서드
     private List<String> getLast7DaysDates(String currentDate) {
         List<String> dates = new ArrayList<>();
@@ -291,10 +290,10 @@ public class RankActivity extends AppCompatActivity {
         // RecyclerView에 데이터를 설정하기 전에 먼저 UI 상위 3개 그룹 정보를 설정합니다.
         if (!rankedGroups.isEmpty()) {
             RankItem firstGroup = rankedGroups.get(0);
-            firstName.setText(firstGroup.getGroupName());
+            //  firstName.setText(firstGroup.getGroupName());
             Log.d("rankItemList", firstGroup.getGroupName());
 
-            firstTotal.setText(String.valueOf(firstGroup.getTotalWeeklyStudyTime()));
+            // firstTotal.setText(String.valueOf(firstGroup.getTotalWeeklyStudyTime()));
         } else {
             // 리스트 크기가 0인 경우 1~3위를 비웁니다.
             firstName.setText("");
@@ -307,8 +306,8 @@ public class RankActivity extends AppCompatActivity {
 
         if (rankedGroups.size() > 1) {
             RankItem secondGroup = rankedGroups.get(1);
-            secondName.setText(secondGroup.getGroupName());
-            secondTotal.setText(String.valueOf(secondGroup.getTotalWeeklyStudyTime()));
+            // secondName.setText(secondGroup.getGroupName());
+            //  secondTotal.setText(String.valueOf(secondGroup.getTotalWeeklyStudyTime()));
         } else {
             // 리스트 크기가 1인 경우 2~3위를 비웁니다.
             secondName.setText("");
@@ -319,8 +318,8 @@ public class RankActivity extends AppCompatActivity {
 
         if (rankedGroups.size() > 2) {
             RankItem thirdGroup = rankedGroups.get(2);
-            thirdName.setText(thirdGroup.getGroupName());
-            thirdTotal.setText(String.valueOf(thirdGroup.getTotalWeeklyStudyTime()));
+            //  thirdName.setText(thirdGroup.getGroupName());
+            //  thirdTotal.setText(String.valueOf(thirdGroup.getTotalWeeklyStudyTime()));
         } else {
             // 리스트 크기가 2인 경우 3위를 비웁니다.
             thirdName.setText("");

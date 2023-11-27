@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class PenaltyCalcActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
 
     private String penaltyCondition;    // 벌금 책정 조건
     private int penaltyConditionValue;  // 인증 건수 또는 공부 시간 조건값
-    private int penaltyAmount;          // 건수 당 벌금
+    public static int penaltyAmount;          // 건수 당 벌금
 
     List<MemberWithPenalty> memberList;
     @Override
@@ -81,7 +82,8 @@ public class PenaltyCalcActivity extends AppCompatActivity {
         editConditionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showConditionOptionsDialog();
+//                showConditionOptionsDialog();
+                showStudyCertificationDialog();
             }
         });
 
@@ -124,6 +126,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 penaltyConditionValue = numberPicker.getValue();
                 handleSelectedStudyCertificationOption(penaltyConditionValue);
+                penaltyCondition = "upload";
                 showPenaltyAmountDialog(); // 다음 단계로 이동
             }
         });
@@ -261,6 +264,15 @@ public class PenaltyCalcActivity extends AppCompatActivity {
 
                                     // MemberWithPenalty 객체를 생성하고 리스트에 추가
                                     finalMember.setPenaltyAmount(weeklyPenaltySum);
+
+                                    // Random 객체 생성
+                                    Random random = new Random();
+
+                                    // 범위 내에서 랜덤 정수 생성
+                                    int randomNumber = random.nextInt(4);
+
+                                    int randomPenalty = weeklyPenaltySum - (penaltyAmount * randomNumber);
+                                    finalMember.setPenaltyAmount(randomPenalty);
                                     memberList.set(finalI, finalMember);
 
                                 }
@@ -299,7 +311,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                 // 사용자 설정 벌금을 일주일 동안의 벌금에 누적할 변수
                 int[] weeklyPenaltySum = {0};
                 weeklyPenaltySum[0] = 0;
-
+                int[] randomPenalty = new int[1];
                 String[] uid = {""};
 
                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
@@ -351,7 +363,16 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                             }
 
                             weeklyPenaltySum[0] += calculatePenaltyAmountFromUploadCount(dailyUploadCount);
-                            Log.d("penalty process", String.valueOf(weeklyPenaltySum[0]));
+
+                            // Random 객체 생성
+                            Random random = new Random();
+
+                            // 범위 내에서 랜덤 정수 생성
+                            int randomNumber = random.nextInt(4);
+
+                            randomPenalty[0] = weeklyPenaltySum[0] - (penaltyAmount * randomNumber);
+//                            finalMember.setPenaltyAmount(randomPenalty);
+                            Log.d("penalty process", String.valueOf(randomPenalty[0]));
                             Log.d("dailyUploadCount", String.valueOf(dailyUploadCount));
 
 //                    // 공부 인증 조건과 비교
@@ -364,8 +385,8 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                         }
 
                         // weeklyPenaltySum을 memberList에 해당 사용자의 벌금 값으로 설정
-                        setWeeklyPenaltySumForMember(memberName, weeklyPenaltySum[0]);
-                        Log.d("WeeklyPenaltySum", String.valueOf(weeklyPenaltySum[0]));
+                        setWeeklyPenaltySumForMember(memberName, randomPenalty[0]);
+                        Log.d("WeeklyPenaltySum", String.valueOf(randomPenalty[0]));
                     }
 
                     @Override
@@ -374,7 +395,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                     }
                 });
 
-                listener.onPenaltyCalculationComplete(weeklyPenaltySum[0]);
+                listener.onPenaltyCalculationComplete(randomPenalty[0]);
                 Log.d("listener called ", "true");
 
                 break;
@@ -382,6 +403,8 @@ public class PenaltyCalcActivity extends AppCompatActivity {
             case "study time":
                 weeklyPenaltySum = new int[]{0};
                 weeklyPenaltySum[0] = 0;
+                randomPenalty = new int[]{0};
+                randomPenalty[0] = 0;
 
                 uid = new String[]{""};
 
@@ -436,12 +459,21 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                                 weeklyPenaltySum[0] += penaltyAmount;
                             }
 
+                            // Random 객체 생성
+                            Random random = new Random();
+
+                            // 범위 내에서 랜덤 정수 생성
+                            int randomNumber = random.nextInt(4);
+
+                            randomPenalty[0] = weeklyPenaltySum[0] - (penaltyAmount * randomNumber);
+//                            finalMember.setPenaltyAmount(randomPenalty);
+                            Log.d("penalty process", String.valueOf(randomPenalty[0]));
 
                             if (finalI == 1) {
 
-                                Log.d("WeeklyPenaltySum", String.valueOf(weeklyPenaltySum[0]));
+                                Log.d("WeeklyPenaltySum", String.valueOf(randomPenalty[0]));
 
-                                setWeeklyPenaltySumForMember(memberName, weeklyPenaltySum[0]);
+                                setWeeklyPenaltySumForMember(memberName, randomPenalty[0]);
                             }
 
                         }
@@ -454,7 +486,7 @@ public class PenaltyCalcActivity extends AppCompatActivity {
                     }
                 });
 
-                listener.onPenaltyCalculationComplete(weeklyPenaltySum[0]);
+                listener.onPenaltyCalculationComplete(randomPenalty[0]);
                 Log.d("listener called ", "true");
                 break;
         }

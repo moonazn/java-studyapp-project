@@ -70,13 +70,12 @@
             app:layout_constraintTop_toTopOf="@+id/frameLayout"
             tools:ignore="TextSizeCheck" />
 
-
     </android.widget.FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/memberRecyclerView"
-        android:layout_width="300dp"
-        android:layout_height="350dp"
+        android:layout_width="330dp"
+        android:layout_height="380dp"
         android:orientation="vertical"
         android:layout_marginTop="50dp"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout"
